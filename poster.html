@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإعلانات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg-main: #f0f4f4;
+    --bg-secondary: #1b4a4a;
+    --primary: #1b6b5a;
+    --primary-light: #2dd4bf;
+    --accent: #0a8545;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --nav-bg: #1b5e5e;
+    --card-bg: #ffffff;
+    --border: #d1fae5;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; font-family: 'Cairo', sans-serif; background: var(--bg-main); color: var(--text-main); overflow-wrap: anywhere; word-break: break-word; }
+body { display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+
+/* HEADER — Flex بدل absolute حتى لا يتداخل الشارة مع العنوان عند التكبير */
+/* ثابت أعلى الصفحة (Sticky) حتى يبقى ظاهرًا أثناء التمرير لأسفل */
+.header {
+    background: var(--bg-secondary); padding: 5px 20px;
+    display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px;
+    position: relative; border-bottom: 2px solid #14b8a6; flex-shrink: 0;
+}
+.header-title { font-size: clamp(11px, 1.6vw, 15px); font-weight: 700; color: #fff; flex: 1 1 260px; max-width: 100%; margin: 0; line-height: 1.5; order: 1; text-align: center; overflow-wrap: anywhere; }
+.support-badge {
+    position: static; transform: none;
+    background: var(--accent); color: #fff; padding: 1px 16px; border-radius: 25px;
+    font-size: 12px; font-weight: 700; box-shadow: 0 4px 12px rgba(10,133,69,0.35);
+    flex-shrink: 0; order: 2; white-space: nowrap;
+}
+
+/* NAV — ثابت أسفل الهيدر مباشرة أثناء التمرير */
+.nav {
+    display: flex; justify-content: center; gap: 8px; background: var(--nav-bg);
+    padding: 5px 14px; flex-wrap: wrap; border-bottom: 2px solid #0f766e; flex-shrink: 0;
+}
+.nav a {
+    color: #e0f2f1; text-decoration: none; font-size: 12px; font-weight: 700;
+    padding: 5px 13px; border-radius: 50px; border: 2px solid rgba(167,243,208,0.5); transition: all 0.3s;
+}
+.nav a:hover { background: #fff; color: #1b5e5e; border-color: #fff; transform: translateY(-2px); }
+
+/* ══ TOPBAR — يغلّف الهيدر والناف معًا كوحدة واحدة ثابتة أعلى الصفحة أثناء التمرير ══
+   (الالتصاق على الغلاف نفسه، وليس على كل عنصر بارتفاع منفصل، يمنع أي فجوة أو تراكب
+    حتى لو زاد ارتفاع الهيدر بسبب التفاف الشارة على سطر مستقل عند الشاشات الضيقة) */
+.topbar { position: sticky; top: 0; z-index: 100; }
+
+/* PAGE LAYOUT */
+.page { flex: 1; display: flex; flex-wrap: wrap; }
+
+/* LEFT PANEL — filters/categories — مثبّتة أسفل الشريط العلوي مباشرة أثناء التمرير */
+.left-panel {
+    width: 230px; min-width: 200px; background: var(--bg-secondary); flex-shrink: 0;
+    display: flex; flex-direction: column;
+    border-left: 3px solid #14b8a6;
+    position: sticky; top: var(--topbar-h, 90px); align-self: flex-start;
+    max-height: calc(100vh - var(--topbar-h, 90px));
+}
+.lp-header {
+    padding: 10px 14px 8px;
+    background: linear-gradient(135deg, #0f3030, #1b5e5e);
+    border-bottom: 2px solid rgba(45,212,191,0.3); flex-shrink: 0;
+}
+.lp-header h3 { color: #2dd4bf; font-size: 13px; font-weight: 900; }
+.lp-header p  { color: rgba(255,255,255,0.55); font-size: 10px; font-weight: 600; margin-top: 3px; }
+
+.filter-list { padding: 8px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; flex: 1; }
+.filter-btn {
+    display: flex; align-items: center; gap: 9px;
+    background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 6px 11px; cursor: pointer;
+    font-family: 'Cairo', sans-serif; font-size: 11px; font-weight: 700;
+    color: rgba(255,255,255,0.7); transition: all 0.25s; text-align: right; width: 100%;
+}
+.filter-btn:hover { background: rgba(45,212,191,0.1); border-color: rgba(45,212,191,0.3); color: #fff; }
+.filter-btn.active { background: rgba(45,212,191,0.15); border-color: #2dd4bf; color: #2dd4bf; }
+.filter-icon { font-size: 15px; }
+.filter-count {
+    margin-right: auto; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6);
+    padding: 1px 8px; border-radius: 10px; font-size: 10px;
+}
+.filter-btn.active .filter-count { background: rgba(45,212,191,0.2); color: #2dd4bf; }
+
+.stats-box { padding: 8px 12px; border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+.stat-item { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.stat-item:last-child { border: none; }
+.stat-label { font-size: 10px; color: rgba(255,255,255,0.5); font-weight: 600; }
+.stat-value { font-size: 12px; color: #2dd4bf; font-weight: 900; }
+
+/* MAIN CONTENT */
+.main { flex: 1; min-width: 280px; display: flex; flex-direction: column; }
+
+/* BOARD HEADER */
+.board-header {
+    padding: 9px 16px; background: var(--card-bg);
+    border-bottom: 2px solid var(--border); flex-shrink: 0;
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+}
+.board-title { display: flex; align-items: center; gap: 10px; }
+.board-title h2 { font-size: 15px; font-weight: 900; color: var(--primary); }
+.board-title .bcount {
+    background: var(--primary); color: #fff; padding: 2px 10px;
+    border-radius: 20px; font-size: 11px; font-weight: 700;
+}
+.board-search {
+    display: flex; align-items: center; gap: 8px;
+    background: #f8fffe; border: 2px solid var(--border); border-radius: 50px;
+    padding: 6px 14px; flex: 1; max-width: 280px;
+}
+.board-search input {
+    border: none; outline: none; background: transparent; font-family: 'Cairo', sans-serif;
+    font-size: 12px; font-weight: 600; color: var(--text-main); width: 100%; text-align: right;
+}
+.board-search input::placeholder { color: #b0bec5; }
+.board-search input:focus ~ .search-border { border-color: var(--primary); }
+
+/* ANNOUNCEMENTS GRID */
+.board-grid { flex: 1; overflow-y: auto; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* ANNOUNCEMENT CARD */
+.ann-card {
+    background: var(--card-bg); border-radius: 16px;
+    border: 1.5px solid var(--border); overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    transition: transform 0.25s, box-shadow 0.25s;
+    animation: slideIn 0.4s ease both;
+}
+.ann-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(27,107,90,0.12); }
+@keyframes slideIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+.ann-card:nth-child(1) { animation-delay: 0.05s; }
+.ann-card:nth-child(2) { animation-delay: 0.10s; }
+.ann-card:nth-child(3) { animation-delay: 0.15s; }
+.ann-card:nth-child(4) { animation-delay: 0.20s; }
+.ann-card:nth-child(5) { animation-delay: 0.25s; }
+.ann-card:nth-child(6) { animation-delay: 0.30s; }
+.ann-card:nth-child(7) { animation-delay: 0.35s; }
+
+/* card stripe */
+.ann-card.urgent  { border-right: 5px solid #ef4444; }
+.ann-card.info    { border-right: 5px solid var(--primary); }
+.ann-card.task    { border-right: 5px solid #f59e0b; }
+.ann-card.success { border-right: 5px solid #10b981; }
+
+/* CARD HEADER */
+.ann-head {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    padding: 9px 14px; border-bottom: 1px solid #f1f5f9;
+}
+.ann-num {
+    width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 900; color: #fff;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+.ann-card.urgent  .ann-num { background: linear-gradient(135deg, #dc2626, #ef4444); }
+.ann-card.info    .ann-num { background: linear-gradient(135deg, var(--primary), var(--accent)); }
+.ann-card.task    .ann-num { background: linear-gradient(135deg, #d97706, #f59e0b); }
+.ann-card.success .ann-num { background: linear-gradient(135deg, #059669, #10b981); }
+
+.ann-meta { flex: 1; min-width: 140px; }
+.ann-title { font-size: 13px; font-weight: 900; color: var(--text-main); margin-bottom: 3px; }
+.ann-date  { font-size: 10px; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 5px; }
+
+.ann-badge {
+    padding: 3px 12px; border-radius: 20px; font-size: 10px; font-weight: 700; white-space: nowrap; flex-shrink: 0;
+}
+.badge-urgent  { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; }
+.badge-info    { background: #ecfdf5; color: var(--accent); border: 1px solid #a7f3d0; }
+.badge-task    { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.badge-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+
+/* CARD BODY */
+.ann-body { padding: 9px 14px; }
+.ann-text { font-size: 13px; font-weight: 600; color: var(--text-main); line-height: 1.9; }
+.ann-text strong { color: var(--primary); font-weight: 800; }
+.ann-text .highlight { background: #fef9c3; padding: 1px 6px; border-radius: 5px; }
+
+/* expandable — تفاصيل إضافية: خط مقروء + ارتفاع يتمدد تلقائياً حسب المحتوى، بدون قص */
+.ann-more { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e5e7eb; height: auto; max-height: none; overflow: visible; }
+.ann-more-list { display: flex; flex-direction: column; gap: 8px; }
+.aml-item { display: flex; align-items: flex-start; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--text-main); line-height: 1.8; white-space: normal; overflow-wrap: anywhere; }
+.aml-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+.ann-expand-btn {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 10px;
+    background: none; border: 1.5px solid var(--border); border-radius: 20px;
+    padding: 4px 14px; font-size: 11px; font-weight: 700; color: var(--primary);
+    cursor: pointer; font-family: 'Cairo', sans-serif; transition: all 0.2s;
+}
+.ann-expand-btn:hover { background: #ecfdf5; border-color: #6ee7b7; }
+
+/* EMPTY STATE */
+.empty-state { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; color: var(--text-muted); gap: 10px; }
+.empty-state .ei { font-size: 47px; }
+.empty-state p { font-size: 13px; font-weight: 700; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: #d1fae5; border-radius: 10px; }
+
+/* MOBILE */
+@media (max-width: 1024px) {
+    .left-panel { width: 190px; }
+}
+@media (max-width: 700px) {
+    /* اللوحة الجانبية (الفلاتر + الإحصائيات) تنتقل أعلى المحتوى بدل إخفائها بالكامل، وتبقى ثابتة أثناء التمرير */
+    .page { flex-direction: column; }
+    .left-panel { width: 100%; max-height: 34vh; border-left: none; border-bottom: 3px solid #14b8a6; }
+    .board-grid { padding: 10px; }
+    .header-title { font-size: 12px; }
+}
+@media (max-width: 420px) {
+    .header-title { font-size: 11px; }
+    .support-badge { font-size: 10px; padding: 1px 11px; }
+    .nav a { font-size: 10px; padding: 4px 10px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+<div class="header">
+    <div class="support-badge">✨ نمط الدعم المرن</div>
+    <div class="header-title">بيئة التعلم المدمج لتنمية مهارات إنتاج الدروس التفاعلية لدى طلاب كلية التربية النوعية</div>
+</div>
+
+<div class="nav">
+    <a href="home.html" target="_self">🏠 الرئيسية</a>
+    <a href="aims.html" target="_self">🎯 أهداف البيئة</a>
+    <a href="guied.html" target="_self">📚 دليل التعلم</a>
+    <a href="mods.html" target="_self">📖 المحتوى التعليمي</a>
+    <a href="poster.html" class="active" target="_self">📢 لوحة الإعلانات</a>
+    <a href="contact.html" target="_self">📞 اتصل بنا</a>
+</div>
+</div>
+
+<div class="page">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <div class="lp-header">
+            <h3>📢 لوحة الإعلانات</h3>
+            <p>تصفح الإعلانات حسب النوع</p>
+        </div>
+        <div class="filter-list">
+            <button class="filter-btn active" onclick="filterAnn('all', this)">
+                <span class="filter-icon">📋</span>
+                <span>جميع الإعلانات</span>
+                <span class="filter-count" id="count-all"></span>
+            </button>
+            <button class="filter-btn" onclick="filterAnn('urgent', this)">
+                <span class="filter-icon">🔴</span>
+                <span>عاجل ومهم</span>
+                <span class="filter-count" id="count-urgent"></span>
+            </button>
+            <button class="filter-btn" onclick="filterAnn('info', this)">
+                <span class="filter-icon">🔵</span>
+                <span>إعلان وتوجيه</span>
+                <span class="filter-count" id="count-info"></span>
+            </button>
+        </div>
+        
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <div class="board-header">
+            <div class="board-title">
+                <h2>📢 لوحة الإعلانات</h2>
+                <span class="bcount" id="shownCount"> </span>
+            </div>
+            <div class="board-search">
+                <input type="text" placeholder="ابحث في الإعلانات..." id="searchInput" oninput="searchAnn()" />
+                <span>🔍</span>
+            </div>
+        </div>
+
+        <div class="board-grid" id="annGrid">
+
+            <!-- إعلان 1: عاجل -->
+            <div class="ann-card urgent" data-type="urgent">
+                <div class="ann-head">
+                    <div class="ann-num"></div>
+                    <div class="ann-meta">
+                        <div class="ann-title">تعليمات الدخول للبيئة وكلمات المرور</div>
+                        <div class="ann-date">📅 بداية الفصل الدراسي</div>
+                    </div>
+                    <span class="ann-badge badge-urgent">🔴 عاجل</span>
+                </div>
+                <div class="ann-body">
+                    <div class="ann-text">
+                        عزيزي المتعلم، للوصول إلى الموديولات التعليمية داخل البيئة تحتاج إلى <strong>كلمة مرور خاصة بكل موديول</strong>. يرجى التواصل مع الأستاذ المشرف للحصول على كلمات المرور الخاصة بمجموعتك. لا تشارك كلمة مرورك مع الآخرين.
+                    </div>
+                    <button class="ann-expand-btn" onclick="toggleMore(this)">📌 تفاصيل إضافية ▼</button>
+                    <div class="ann-more">
+                        <div class="ann-more-list">
+                            <div class="aml-item"><span class="aml-icon">🔑</span> كلمة المرور مخصصة لك شخصياً ولمجموعتك الدراسية فقط</div>
+                            <div class="aml-item"><span class="aml-icon">📧</span> في حال نسيان كلمة المرور تواصل فوراً عبر صفحة "اتصل بنا"</div>
+                            <div class="aml-item"><span class="aml-icon">⏰</span> الدخول للبيئة متاح على مدار اليوم دون قيود زمنية</div>
+                            <div class="aml-item"><span class="aml-icon">🖥️</span> يُفضل استخدام Google Chrome للحصول على أفضل تجربة</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- إعلان 2: توجيه -->
+            <div class="ann-card info" data-type="info">
+                <div class="ann-head">
+                    <div class="ann-num"></div>
+                    <div class="ann-meta">
+                        <div class="ann-title">تعليمات البدء في الموديول الثالث</div>
+                        <div class="ann-date">📅 الأسبوع الأول</div>
+                    </div>
+                    <span class="ann-badge badge-info">🔵 توجيه</span>
+                </div>
+                <div class="ann-body">
+                    <div class="ann-text">
+                        يبدأ الطلاب دراسة <strong>الموديول الثالث</strong> المتعلق بإنتاج الدروس التفاعلية باستخدام برنامج CourseLab. تأكد من تحميل البرنامج وتثبيته على جهازك <span class="highlight">قبل الدرس الثاني</span>.
+                    </div>
+                    <button class="ann-expand-btn" onclick="toggleMore(this)">📌 تفاصيل إضافية ▼</button>
+                    <div class="ann-more">
+                        <div class="ann-more-list">
+                            <div class="aml-item"><span class="aml-icon">1️⃣</span> ابدأ بدرس "الخلفية النظرية" وتعرّف على هيكل الدرس التفاعلي</div>
+                            <div class="aml-item"><span class="aml-icon">2️⃣</span> انتقل لدرس "تحميل وتثبيت البرنامج" وطبّق على جهازك مباشرة</div>
+                            <div class="aml-item"><span class="aml-icon">3️⃣</span> اتبع التسلسل المنطقي للدروس ولا تتخطى أي درس</div>
+                            <div class="aml-item"><span class="aml-icon">💾</span> احفظ عملك باستمرار بـ Ctrl+S أثناء العمل على البرنامج</div>
+                            <div class="aml-item"><span class="aml-icon">📂</span> أنشئ مجلداً خاصاً لمشاريعك واحتفظ بنسخ احتياطية</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- إعلان جديد: تعليمات الموديول الرابع -->
+            <div class="ann-card info" data-type="info">
+                <div class="ann-head">
+                    <div class="ann-num"></div>
+                    <div class="ann-meta">
+                        <div class="ann-title">تعليمات البدء في الموديول الرابع</div>
+                        <div class="ann-date">📅 بعد إنهاء الموديول الثالث</div>
+                    </div>
+                    <span class="ann-badge badge-info">🔵 توجيه</span>
+                </div>
+                <div class="ann-body">
+                    <div class="ann-text">
+                        بعد الانتهاء من جميع دروس <strong>الموديول الثالث</strong>، يبدأ الطلاب دراسة <strong>الموديول الرابع</strong> الخاص بنشر وتطبيق وتقويم الدرس التفاعلي. ابدأ بدرس <span class="highlight">نشر الدرس التفاعلي في برنامج CourseLab</span> وتعرّف على طرق النشر الخمس والفيديو الخاص بكل طريقة.
+                    </div>
+                    <button class="ann-expand-btn" onclick="toggleMore(this)">📌 تفاصيل إضافية ▼</button>
+                    <div class="ann-more">
+                        <div class="ann-more-list">
+                            <div class="aml-item"><span class="aml-icon">1️⃣</span> ابدأ بدرس "نشر الدرس التفاعلي" وتعرّف على طرق النشر الخمس وفيديو كل طريقة</div>
+                            <div class="aml-item"><span class="aml-icon">2️⃣</span> نفّذ نشاط نشر درسك التفاعلي على CD بعد دراسة خطوات النشر</div>
+                            <div class="aml-item"><span class="aml-icon">3️⃣</span> انتقل لدرس "التغذية الراجعة ومرحلة التنفيذ" لمتابعة تطبيق الدرس</div>
+                            <div class="aml-item"><span class="aml-icon">4️⃣</span> أنهِ دراستك بدرس "مرحلة التقويم" واتبع أدوات التقويم الموضحة به</div>
+                            <div class="aml-item"><span class="aml-icon">📂</span> راجع الإنفوجرافيك الخاص بكل درس فهو يلخّص أهم النقاط بصرياً</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <!-- إعلان 3: عاجل -->
+            <div class="ann-card urgent" data-type="urgent">
+                <div class="ann-head">
+                    <div class="ann-num"></div>
+                    <div class="ann-meta">
+                        <div class="ann-title">تنبيه هام: موعد الاختبار التحصيلي الشامل</div>
+                        <div class="ann-date">📅 نهاية الفصل الدراسي</div>
+                    </div>
+                    <span class="ann-badge badge-urgent">🔴 عاجل</span>
+                </div>
+                <div class="ann-body">
+                    <div class="ann-text">
+                        سيُعقد <strong>الاختبار التحصيلي الشامل</strong> في نهاية الفصل الدراسي. مدة الاختبار <span class="highlight">90 دقيقة</span>. يشمل جميع موضوعات الموديولات الثالث والرابع. تأكد من إنهاء جميع الدروس والأنشطة قبل تأدية الاختبار.
+                    </div>
+                    <button class="ann-expand-btn" onclick="toggleMore(this)">📌 تفاصيل إضافية ▼</button>
+                    <div class="ann-more">
+                        <div class="ann-more-list">
+                            <div class="aml-item"><span class="aml-icon">⏱️</span> مدة الاختبار: 90 دقيقة تبدأ فور دخولك</div>
+                            <div class="aml-item"><span class="aml-icon">❓</span> يشمل أسئلة اختيار متعدد وصح وخطأ</div>
+                            <div class="aml-item"><span class="aml-icon">🔀</span> الأسئلة تظهر بترتيب عشوائي لكل طالب</div>
+                            <div class="aml-item"><span class="aml-icon">💯</span> درجة النجاح لا تقل عن 50% من الدرجة الكلية</div>
+                            <div class="aml-item"><span class="aml-icon">🌐</span> تأكد من استقرار اتصالك بالإنترنت قبل دخول الاختبار</div>
+                            <div class="aml-item"><span class="aml-icon">🚫</span> لا تغلق نافذة الاختبار أثناء تأديته نهائياً</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end board-grid -->
+
+        <!-- EMPTY STATE (تظهر فقط عند عدم وجود نتائج بحث/فلترة) -->
+        <div class="empty-state" id="emptyState">
+            <div class="ei">📭</div>
+            <p>لا توجد إعلانات مطابقة لبحثك</p>
+        </div>
+    </div><!-- end main -->
+</div><!-- end page -->
+
+<script>
+let currentFilter = 'all';
+
+/* ترقيم بطاقات الإعلانات وعرض عدّاد كل فئة عند التحميل */
+function initBoard() {
+    const cards = document.querySelectorAll('.ann-card');
+    const counts = { all: cards.length, urgent: 0, info: 0, task: 0, success: 0 };
+    cards.forEach((card, i) => {
+        const numEl = card.querySelector('.ann-num');
+        if (numEl) numEl.textContent = i + 1;
+        const type = card.dataset.type;
+        if (counts[type] !== undefined) counts[type]++;
+    });
+    ['all', 'urgent', 'info', 'task', 'success'].forEach(t => {
+        const el = document.getElementById('count-' + t);
+        if (el) el.textContent = counts[t] || 0;
+    });
+}
+
+function filterAnn(type, btn) {
+    // update buttons
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = type;
+    applyFilters();
+}
+
+function searchAnn() {
+    applyFilters();
+}
+
+function applyFilters() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const cards = document.querySelectorAll('.ann-card');
+    let shown = 0;
+
+    cards.forEach(card => {
+        const typeMatch = currentFilter === 'all' || card.dataset.type === currentFilter;
+        const text = card.innerText.toLowerCase();
+        const textMatch = !q || text.includes(q);
+        if (typeMatch && textMatch) {
+            card.style.display = '';
+            shown++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    // empty state
+    document.getElementById('emptyState').style.display = shown === 0 ? 'flex' : 'none';
+
+    // count badge
+    const arabicNums = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+    const toAr = n => String(n).split('').map(d => arabicNums[+d]).join('');
+    document.getElementById('shownCount').textContent = toAr(shown) + ' إعلان';
+}
+
+function toggleMore(btn) {
+    const more = btn.nextElementSibling;
+    const isOpen = more.style.display === 'block';
+    more.style.display = isOpen ? 'none' : 'block';
+    btn.textContent = isOpen ? '📌 تفاصيل إضافية ▼' : '📌 إخفاء التفاصيل ▲';
+    if (!isOpen) btn.textContent = btn.textContent.replace('تفاصيل إضافية', 'إخفاء التفاصيل').replace('رسالة كاملة', 'إخفاء الرسالة').replace('▼','▲');
+}
+
+initBoard();
+applyFilters();
+
+/* ══ حساب ارتفاع الشريط العلوي فعليًا وتمريره كمتغيّر CSS
+   حتى تلتصق اللوحة الجانبية أسفله بدقّة على أي مقاس شاشة أو مستوى تكبير ══ */
+function updateTopbarHeight() {
+    const tb = document.querySelector('.topbar');
+    if (tb) document.documentElement.style.setProperty('--topbar-h', tb.offsetHeight + 'px');
+}
+updateTopbarHeight();
+window.addEventListener('resize', updateTopbarHeight);
+window.addEventListener('load', updateTopbarHeight);
+</script>
+</body>
+</html>

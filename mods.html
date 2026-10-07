@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الموديولات </title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg-main: #f0f4f4;
+    --bg-secondary: #1b4a4a;
+    --card-bg: #ffffff;
+    --primary: #1b6b5a;
+    --primary-light: #2dd4bf;
+    --accent: #0a8545;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --nav-bg: #1b5e5e;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ========== HEADER ========== */
+.header {
+    background: var(--bg-secondary);
+    padding: 7px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: relative;
+    border-bottom: 2px solid #14b8a6;
+    flex-shrink: 0;
+}
+.header-title {
+    font-size: clamp(12px, 1.8vw, 16px);
+    font-weight: 700;
+    color: #fff;
+    flex: 1 1 260px;
+    max-width: 100%;
+    margin: 0;
+    line-height: 1.5;
+    order: 1;
+    overflow-wrap: anywhere;
+}
+.support-badge {
+    position: static;
+    transform: none;
+    background: var(--accent);
+    color: #fff;
+    padding: 1px 16px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(10,133,69,0.35);
+    flex-shrink: 0;
+    order: 2;
+    white-space: nowrap;
+}
+
+/* ========== NAV ========== */
+.nav {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    background: var(--nav-bg);
+    padding: 7px 14px;
+    flex-wrap: wrap;
+    border-bottom: 2px solid #0f766e;
+    flex-shrink: 0;
+}
+.nav a {
+    color: #e0f2f1;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 13px;
+    border-radius: 50px;
+    border: 2px solid rgba(167,243,208,0.5);
+    transition: all 0.3s ease;
+}
+.nav a:hover {
+    background: #fff;
+    color: #1b5e5e;
+    border-color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+/* ========== PAGE CONTENT ========== */
+.page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 20px;
+    gap: 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ========== SECTION TITLE ========== */
+.section-title {
+    text-align: center;
+    margin-top: -170px;
+}
+.section-title h2 {
+    font-size: clamp(16px, 2.4vw, 22px);
+    font-weight: 900;
+    color: var(--primary);
+}
+.section-title p {
+    font-size: clamp(12px, 1.5vw, 14px);
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: 2px;
+}
+.animated-line {
+    width: 220px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary), #14b8a6, var(--accent), transparent);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    margin: 6px auto 0;
+    animation: lineSlide 3s linear infinite;
+}
+@keyframes lineSlide {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+
+/* ========== CARDS WRAPPER ========== */
+.cards-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 680px;
+}
+
+/* ========== MODULE CARD (horizontal) ========== */
+.mod-card {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: #fff;
+    border-radius: 999px;
+    border: 2.5px solid var(--primary);
+    box-shadow: 0 6px 22px rgba(27,107,90,0.11);
+    padding: 2px 2px 2px 2px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+    cursor: pointer;
+    justify-content: flex-start;
+}
+.mod-card:nth-child(2) { animation-delay: 0.12s; }
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.mod-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 30%, rgba(20,184,166,0.06) 50%, transparent 70%);
+    background-size: 200% 100%;
+    animation: shimmer 4s linear infinite;
+    border-radius: inherit;
+    pointer-events: none;
+}
+@keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.mod-card:hover {
+    transform: translateY(-4px) scale(1.015);
+    box-shadow: 0 14px 36px rgba(27,107,90,0.18);
+    border-color: #14b8a6;
+}
+
+.mod-img-circle {
+    width: 80px;
+    height: 80px;
+    min-width: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    background: #e8f5f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(27,107,90,0.2);
+    transition: border-color 0.3s;
+    flex-shrink: 0;
+}
+.mod-card:hover .mod-img-circle {
+    border-color: #14b8a6;
+}
+.mod-img-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.mod-img-circle .img-placeholder {
+    font-size: 2.2rem;
+    color: var(--primary);
+    opacity: 0.7;
+}
+
+.mod-info {
+    flex: 1;
+    min-width: 0;
+    padding-right: 18px;
+    text-align: right;
+}
+.mod-number {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+.mod-title {
+    font-size: clamp(14px, 2vw, 17px);
+    font-weight: 900;
+    color: var(--primary);
+    line-height: 1.35;
+    margin-bottom: 4px;
+    overflow-wrap: anywhere;
+}
+.mod-desc {
+    font-size: clamp(11px, 1.4vw, 13px);
+    color: var(--text-muted);
+    font-weight: 600;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.mod-arrow {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    box-shadow: 0 4px 12px rgba(10,133,69,0.3);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+    margin-right: 6px;
+}
+.mod-card:hover .mod-arrow {
+    transform: scale(1.15) rotate(-8deg);
+}
+
+/* ========== LOCK BADGE ========== */
+.lock-badge {
+    position: absolute;
+    top: 50%;
+    left: 72px;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #dc2626;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(220,38,38,0.4);
+    z-index: 2;
+    transition: background 0.3s;
+}
+.mod-card.unlocked .lock-badge {
+    background: #16a34a;
+}
+
+/* ========== MODAL OVERLAY ========== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-box {
+    background: #fff;
+    border-radius: 24px;
+    padding: 32px 28px 28px;
+    width: 340px;
+    max-width: 92vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: modalPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.8); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.modal-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    display: block;
+}
+.modal-title {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--primary);
+    margin-bottom: 6px;
+}
+.modal-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.modal-input {
+    width: 100%;
+    border: 2px solid #d1d5db;
+    border-radius: 50px;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 4px;
+    outline: none;
+    transition: border-color 0.3s;
+    direction: ltr;
+}
+.modal-input:focus {
+    border-color: var(--primary);
+}
+.modal-input.shake {
+    animation: shake 0.4s ease;
+    border-color: #dc2626;
+}
+@keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-8px); }
+    40%      { transform: translateX(8px); }
+    60%      { transform: translateX(-6px); }
+    80%      { transform: translateX(6px); }
+}
+
+.modal-error {
+    font-size: 12px;
+    color: #dc2626;
+    font-weight: 700;
+    margin-top: 8px;
+    min-height: 16px;
+    transition: opacity 0.3s;
+}
+
+.modal-btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+}
+.btn-confirm {
+    flex: 1;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 11px 0;
+    font-size: 14px;
+    font-weight: 900;
+    font-family: 'Cairo', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.btn-confirm:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-cancel {
+    flex: 1;
+    background: #f3f4f6;
+    color: #6b7280;
+    border: none;
+    border-radius: 50px;
+    padding: 11px 0;
+    font-size: 14px;
+    font-weight: 900;
+    font-family: 'Cairo', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-cancel:hover { background: #e5e7eb; }
+
+/* ========== MOBILE ========== */
+@media (max-width: 600px) {
+    .support-badge { position: static; transform: none; display: inline-block; margin-bottom: 6px; }
+    .header { padding-top: 8px; }
+    .header-title { max-width: 100%; font-size: 13px; }
+    .nav a { font-size: 10px; padding: 3px 8px; }
+    html, body { overflow: auto; }
+    .page-content { overflow: auto; padding-bottom: 20px; }
+    .mod-card { border-radius: 60px; padding: 8px 16px 8px 8px; }
+    .mod-img-circle { width: 64px; height: 64px; min-width: 64px; }
+    .mod-arrow { width: 32px; height: 32px; min-width: 32px; font-size: 15px; }
+    .lock-badge { left: 56px; width: 26px; height: 26px; font-size: 12px; }
+    .section-title { margin-top: -40px; }
+}
+/* شاشات قصيرة (أو تكبير Zoom عالٍ يقلّص الارتفاع الفعّال) — نمنع الهامش السالب الكبير من دفع العنوان خارج الظهور */
+@media (max-height: 700px) {
+    .section-title { margin-top: -40px; }
+}
+@media (max-height: 480px) {
+    .section-title { margin-top: 0; }
+    .page-content { justify-content: flex-start; padding-top: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <div class="support-badge">✨ نمط الدعم المرن</div>
+    <div class="header-title">
+        بيئة التعلم المدمج لتنمية مهارات إنتاج الدروس التفاعلية لدى طلاب كلية التربية النوعية
+    </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+    <a href="home.html" target="_self">🏠 الرئيسية</a>
+    <a href="aims.html" target="_self">🎯 أهداف البيئة</a>
+    <a href="guied.html" target="_self">📚 دليل التعلم</a>
+    <a href="mods.html" class="active" target="_self">📖 المحتوى التعليمي</a>
+    <a href="poster.html" target="_self">📢 لوحة الإعلانات</a>
+    <a href="contact.html" target="_self">📞 اتصل بنا</a>
+</div>
+
+<!-- PAGE CONTENT -->
+<div class="page-content">
+
+    <div class="section-title">
+        <h2>📖 الموديولات التعليمية</h2>
+        <p>اختر الموديول للوصول إلى دروسه</p>
+        <div class="animated-line"></div>
+    </div>
+
+    <div class="cards-wrapper">
+
+        <!-- Module 3 -->
+        <div class="mod-card" onclick="openModal('mod3', 'mod3lessons.html')">
+            <div class="lock-badge" id="lock-mod3">🔒</div>
+            <div class="mod-img-circle">
+                <span class="img-placeholder">🎨</span>
+            </div>
+            <div class="mod-info">
+                <div class="mod-number">الموديول الثالث</div>
+                <div class="mod-title">مرحلة إنتاج الدروس التفاعلية باستخدام برنامج CourseLab</div>
+                <div class="mod-desc">مهارات تصميم الرسومات والعناصر التفاعلية في الدروس الرقمية</div>
+            </div>
+            <div class="mod-arrow">←</div>
+        </div>
+
+        <!-- Module 4 -->
+        <div class="mod-card" onclick="openModal('mod4', 'mod4lessons.html')">
+            <div class="lock-badge" id="lock-mod4">🔒</div>
+            <div class="mod-img-circle">
+                <span class="img-placeholder">🎬</span>
+            </div>
+            <div class="mod-info">
+                <div class="mod-number">الموديول الرابع</div>
+                <div class="mod-title">مرحلة نشر وتطبيق وتقويم الدروس التفاعلية</div>
+                <div class="mod-desc">مهارات إنتاج الفيديو التعليمي والمحتوى المتعدد الوسائط</div>
+            </div>
+            <div class="mod-arrow">←</div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function openModal(modKey, page) { window.location.href = page; }
+</script>
+<style>.lock-badge{display:none!important}</style>
+
+</body>
+</html>

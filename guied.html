@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دليل التعلم</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg2:#1b4a4a;--pr:#1b6b5a;--ac:#0a8545;--tl:#2dd4bf;--tm:#1f2937;--mu:#6b7280;--nv:#1b5e5e;--bd:#d1fae5;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;min-height:100%;width:100%;font-family:'Cairo',sans-serif;background:#f0f4f4;color:var(--tm);overflow:auto;}
+body{display:flex;flex-direction:column;}
+.header{background:var(--bg2);padding:5px 16px;text-align:center;position:relative;border-bottom:2px solid #14b8a6;flex-shrink:0;}
+.ht{font-size:13px;font-weight:700;color:#fff;line-height:1.4;}
+.sbdg{position:absolute;top:50%;left:14px;transform:translateY(-50%);background:var(--ac);color:#fff;padding:1px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.nav{display:flex;justify-content:center;gap:5px;background:var(--nv);padding:5px 10px;flex-wrap:wrap;border-bottom:2px solid #0f766e;flex-shrink:0;}
+.nav a{color:#e0f2f1;text-decoration:none;font-size:11px;font-weight:700;padding:3px 10px;border-radius:50px;border:1.5px solid rgba(167,243,208,0.4);transition:all .25s;}
+.nav a:hover{background:#fff;color:#1b5e5e;}
+.page{flex:1;display:flex;overflow:hidden;min-height:0;}
+.sidebar{width:210px;background:var(--bg2);flex-shrink:0;display:flex;flex-direction:column;border-left:2px solid #14b8a6;overflow:hidden;}
+.sbh{padding:9px 12px 7px;background:linear-gradient(135deg,#0f3030,#1b5e5e);border-bottom:1px solid rgba(45,212,191,.3);flex-shrink:0;}
+.sbh h3{color:var(--tl);font-size:12px;font-weight:900;}
+.sbh p{color:rgba(255,255,255,.5);font-size:9px;font-weight:600;margin-top:2px;}
+.slist{flex:1;overflow-y:auto;padding:5px;display:flex;flex-direction:column;gap:3px;}
+.slist::-webkit-scrollbar{width:3px;}.slist::-webkit-scrollbar-thumb{background:rgba(45,212,191,.3);border-radius:10px;}
+.sbtn{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:6px 8px;cursor:pointer;font-family:'Cairo',sans-serif;width:100%;text-align:right;transition:all .2s;}
+.sbtn:hover{background:rgba(45,212,191,.08);border-color:rgba(45,212,191,.3);}
+.sbtn.active{background:rgba(45,212,191,.14);border-color:var(--tl);}
+.sn{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#94a3b8;line-height:1;}
+.sbtn.active .sn{background:linear-gradient(135deg,var(--pr),var(--ac));border-color:var(--tl);color:#fff;}
+.sbtn.done .sn{background:var(--ac);border-color:var(--tl);color:#fff;font-size:10px;}
+.st{flex:1;min-width:0;}
+.stt{font-size:10.5px;font-weight:700;color:#d4f5f0;line-height:1.3;}
+.sts{font-size:9px;font-weight:600;color:rgba(255,255,255,.38);margin-top:1px;}
+.sbtn.active .stt{color:var(--tl);}
+.dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.12);flex-shrink:0;}
+.sbtn.active .dot{background:var(--tl);box-shadow:0 0 5px var(--tl);}
+.sbtn.done .dot{background:var(--ac);}
+.pw{padding:7px 10px;border-top:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+.pr2{display:flex;justify-content:space-between;font-size:9px;color:rgba(255,255,255,.45);font-weight:700;margin-bottom:4px;}
+.pb{height:4px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden;}
+.pf{height:100%;background:linear-gradient(90deg,var(--pr),var(--tl));transition:width .4s;border-radius:10px;}
+.content{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0;}
+.panel{display:none;flex:1;flex-direction:column;overflow:hidden;min-height:0;}
+.panel.active{display:flex;}
+.pbar{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--bg2),#0f766e);padding:7px 14px;flex-shrink:0;}
+.pic{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.pbar h2{font-size:12px;font-weight:900;color:#fff;}
+.pbar p{font-size:9px;color:rgba(255,255,255,.65);font-weight:600;margin-top:1px;}
+.pbdg{margin-right:auto;flex-shrink:0;background:rgba(45,212,191,.18);border:1px solid var(--tl);color:var(--tl);padding:2px 9px;border-radius:20px;font-size:9px;font-weight:700;}
+.pbody{flex:1;overflow-y:auto;overflow-x:hidden;padding:8px 12px 4px;display:flex;flex-direction:column;gap:7px;min-height:0;}
+.pbody::-webkit-scrollbar{width:3px;}.pbody::-webkit-scrollbar-thumb{background:#d1fae5;border-radius:10px;}
+.pnav{display:flex;justify-content:space-between;align-items:center;padding:5px 12px;border-top:1px solid #e5e7eb;flex-shrink:0;background:#fff;}
+.nb{display:flex;align-items:center;gap:5px;padding:5px 14px;border-radius:50px;border:none;font-family:'Cairo',sans-serif;font-size:11px;font-weight:800;cursor:pointer;transition:all .2s;}
+.np{background:#f3f4f6;color:#374151;}.np:hover{background:#e5e7eb;}
+.nn{background:linear-gradient(135deg,var(--pr),var(--ac));color:#fff;box-shadow:0 3px 10px rgba(10,133,69,.3);}
+.nn:hover{transform:translateX(-2px);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+.g1{display:grid;grid-template-columns:1fr;gap:7px;}
+.card{background:#fff;border-radius:11px;border:1.5px solid var(--bd);box-shadow:0 2px 8px rgba(0,0,0,.05);overflow:hidden;}
+.ch{display:flex;align-items:center;gap:6px;padding:6px 10px;background:#f8fffe;border-bottom:1px solid #f1f5f9;}
+.chi{font-size:12px;line-height:1;flex-shrink:0;}
+.cht{font-size:11px;font-weight:800;color:var(--pr);}
+.cb{padding:7px 10px;}
+.li{display:flex;align-items:flex-start;gap:7px;padding:4px 0;border-bottom:1px dashed #f3f4f6;}
+.li:last-child{border:none;padding-bottom:0;}
+.ln{width:18px;height:18px;border-radius:5px;flex-shrink:0;background:linear-gradient(135deg,var(--pr),var(--ac));color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.lic{font-size:12px;flex-shrink:0;margin-top:1px;line-height:1;}
+.lt{font-size:11px;font-weight:600;color:var(--tm);line-height:1.55;}
+.lt strong{color:var(--pr);font-weight:800;}
+.flow{display:flex;flex-direction:column;}
+.fs{display:flex;gap:8px;padding:5px 0;border-right:2px solid var(--bd);margin-right:8px;padding-right:10px;position:relative;}
+.fs::before{content:'';position:absolute;right:-4px;top:11px;width:7px;height:7px;border-radius:50%;background:var(--pr);border:2px solid #fff;box-shadow:0 0 0 1.5px var(--pr);}
+.fs:last-child{border-right-color:transparent;}
+.fn{width:20px;height:20px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--pr),var(--ac));color:#fff;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;}
+.ft{font-size:10.5px;font-weight:800;color:var(--pr);margin-bottom:1px;}
+.fd{font-size:9.5px;font-weight:600;color:var(--mu);line-height:1.4;}
+.hbox{background:linear-gradient(135deg,#ecfdf5,#f0fdf9);border:1.5px solid #a7f3d0;border-radius:9px;padding:8px 11px;}
+.hbt{font-size:11px;font-weight:800;color:var(--pr);margin-bottom:4px;display:flex;align-items:center;gap:5px;}
+.hbox p{font-size:10.5px;font-weight:600;color:var(--tm);line-height:1.65;}
+.wbox{background:#fffbeb;border:1.5px solid #fde68a;border-radius:9px;padding:7px 11px;display:flex;align-items:flex-start;gap:7px;}
+.wi{font-size:14px;flex-shrink:0;margin-top:1px;line-height:1;}
+.wbox p{font-size:10.5px;font-weight:600;color:#92400e;line-height:1.55;}
+.gtbl{width:100%;border-collapse:collapse;font-size:10.5px;}
+.gtbl th{background:var(--bg2);color:var(--tl);padding:5px 9px;text-align:right;font-size:10px;font-weight:800;}
+.gtbl td{padding:5px 9px;border-bottom:1px solid #f1f5f9;font-weight:600;}
+.gtbl tr:last-child td{border:none;}.gtbl tr:nth-child(even) td{background:#f8fffe;}
+.badge{display:inline-block;padding:1px 7px;border-radius:12px;font-size:9px;font-weight:700;}
+.bg{background:#d1fae5;color:#065f46;}.bb{background:#dbeafe;color:#1e40af;}.ba{background:#fef3c7;color:#92400e;}
+.cta{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--pr),var(--ac));color:#fff;text-decoration:none;padding:9px 22px;border-radius:50px;font-size:12px;font-weight:900;font-family:'Cairo',sans-serif;box-shadow:0 4px 14px rgba(10,133,69,.35);transition:all .25s;}
+.cta:hover{transform:translateY(-2px);}
+.panel-img{width:100%;height:auto;max-height:75%;object-fit:contain;object-position:top;display:block;border-radius:8px;}
+
+/* ══ RESPONSIVE / ZOOM SAFETY ══ */
+/* الهيدر: Flex بدل absolute حتى لا يتداخل الشارة مع العنوان عند التكبير أو الشاشات الضيقة */
+.header{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;position:relative;}
+.sbdg{position:static;transform:none;order:2;flex-shrink:0;}
+.ht{flex:1 1 260px;max-width:100%;order:1;}
+
+/* السماح بالتفاف الجداول أفقياً فقط عند الضرورة بدل كسر الصفحة */
+.tbl-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+
+@media (max-width: 1024px){
+  .g3{grid-template-columns:1fr 1fr;}
+}
+@media (max-width: 780px){
+  .page{flex-direction:column;overflow:visible;}
+  .sidebar{width:100%;max-height:38vh;border-left:none;border-bottom:3px solid var(--pr);}
+  .content{width:100%;}
+  .g2,.g3{grid-template-columns:1fr;}
+}
+@media (max-width: 480px){
+  .ht{font-size:12px;}
+  .sbdg{font-size:10px;padding:1px 9px;}
+  .nav a{font-size:10px;padding:3px 8px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ صندوق تكبير صورة الدليل ══ -->
+<div id="guideZoomOverlay" onclick="closeGuideZoom()"
+  style="display:none;position:fixed;inset:0;background:rgba(15,23,25,.92);z-index:6000;
+         align-items:center;justify-content:center;padding:24px;cursor:zoom-out;">
+  <img id="guideZoomTarget" src="" alt="تكبير الصورة"
+       style="max-width:94%;max-height:94%;object-fit:contain;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.5);" />
+  <div style="position:absolute;top:18px;left:18px;background:rgba(255,255,255,.15);color:#fff;
+              border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+              font-size:20px;">✕</div>
+</div>
+<script>
+  function openGuideZoom(src){
+    document.getElementById('guideZoomTarget').src = src;
+    document.getElementById('guideZoomOverlay').style.display = 'flex';
+  }
+  function closeGuideZoom(){
+    document.getElementById('guideZoomOverlay').style.display = 'none';
+  }
+</script>
+
+<div class="header">
+    <div class="sbdg">✨ نمط الدعم المرن</div>
+    <div class="ht">بيئة التعلم المدمج لتنمية مهارات إنتاج الدروس التفاعلية لدى طلاب كلية التربية النوعية</div>
+</div>
+<div class="nav">
+    <a href="home.html" target="_self">🏠 الرئيسية</a>
+    <a href="aims.html" target="_self">🎯 أهداف البيئة</a>
+    <a href="#" class="active" target="_self">📚 دليل التعلم</a>
+    <a href="mods.html" target="_self">📖 المحتوى التعليمي</a>
+    <a href="poster.html" target="_self">📢 لوحة الإعلانات</a>
+    <a href="contact.html" target="_self">📞 اتصل بنا</a>
+</div>
+<div class="page">
+<div class="sidebar">
+    <div class="sbh"><h3>📚 دليل المتعلم</h3><p>اتبع الخطوات بالترتيب</p></div>
+    <div class="slist" id="slist"></div>
+    <div class="pw">
+        <div class="pr2"><span>التقدم</span><span id="pp">0%</span></div>
+        <div class="pb"><div class="pf" id="pf" style="width:0%"></div></div>
+    </div>
+</div>
+<div class="content">
+
+<!-- PANEL 1 -->
+<div class="panel active" id="p1">
+<div class="pbar"><div class="pic">🌟</div><div><h2>مرحباً بك في بيئة التعلم المدمج</h2><p>تعرّف على البيئة قبل البدء</p></div><div class="pbdg">١ من ٨</div></div>
+<div class="pbody">
+    <div class="hbox">
+      <div class="hbt">👋 أهلاً بك في بيئة التعلم المدمج</div>
+      <p>هذه البيئة جزء من دراسة بحثية (رسالة دكتوراه) حول أثر التفاعل بين <strong>أنماط الدعم</strong> و<strong>أساليب التعلم</strong> على تنمية مهارات إنتاج الدروس التفاعلية باستخدام برنامج CourseLab.</p>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><span class="chi">🗺️</span><span class="cht">رحلتك داخل البيئة</span></div>
+        <div class="cb">
+          <div class="flow">
+            <div class="fs"><div class="fn">1</div><div><div class="ft">استكشف البيئة</div><div class="fd">تعرّف على الأهداف ودليل التعلم قبل البدء.</div></div></div>
+            <div class="fs"><div class="fn">2</div><div><div class="ft">أدِّ الاختبار القبلي</div><div class="fd">لقياس مستواك قبل دراسة المحتوى.</div></div></div>
+            <div class="fs"><div class="fn">3</div><div><div class="ft">ادرس الموديولات</div><div class="fd">الموديول الثالث ثم الرابع، درسًا درسًا.</div></div></div>
+            <div class="fs"><div class="fn">4</div><div><div class="ft">نفّذ الأنشطة</div><div class="fd">في نهاية كل درس، وسلّم إجابتك.</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="chi">🎯</span><span class="cht">ماذا يميّز هذه البيئة؟</span></div>
+        <div class="cb">
+          <div class="li"><div class="ln">١</div><div class="lt"><strong>دعم مستمر:</strong> نصائح وتوجيهات تظهر تباعًا طوال دراستك.</div></div>
+          <div class="li"><div class="ln">٢</div><div class="lt"><strong>محتوى متنوع:</strong> نص، فيديو، وإنفوجرافيك بالتناوب بين الدروس.</div></div>
+          <div class="li"><div class="ln">٣</div><div class="lt"><strong>تصميم بلا تمرير:</strong> كل ما تحتاجه يظهر أمامك مباشرة.</div></div>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="pnav"><div></div><button class="nb nn" onclick="go(2)">التالي ←</button></div>
+</div>
+
+<!-- PANEL 2 -->
+<div class="panel" id="p2">
+<div class="pbar"><div class="pic">💻</div><div><h2>متطلبات التعلم والأدوات اللازمة</h2><p>تأكد من جاهزية بيئتك التقنية</p></div><div class="pbdg">٢ من ٨</div></div>
+<div class="pbody">
+    <div class="g3">
+      <div class="card">
+        <div class="ch"><span class="chi">🖥️</span><span class="cht">الجهاز</span></div>
+        <div class="cb"><p style="font-size:11px;font-weight:600;color:var(--tm);line-height:1.7;">كمبيوتر أو لابتوب أو تابلت بشاشة لا تقل عن 10 بوصة لعرض المحتوى بوضوح.</p></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="chi">📶</span><span class="cht">الإنترنت</span></div>
+        <div class="cb"><p style="font-size:11px;font-weight:600;color:var(--tm);line-height:1.7;">اتصال مستقر لمشاهدة الفيديوهات وتحميل الأنشطة دون انقطاع.</p></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="chi">🌐</span><span class="cht">المتصفح</span></div>
+        <div class="cb"><p style="font-size:11px;font-weight:600;color:var(--tm);line-height:1.7;">إصدار حديث من Chrome أو Firefox أو Edge لأفضل أداء.</p></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><span class="chi">🎧</span><span class="cht">أدوات إضافية موصى بها</span></div>
+      <div class="cb">
+        <div class="li"><div class="ln">١</div><div class="lt">سماعات لمتابعة شرح الفيديوهات التعليمية بوضوح.</div></div>
+        <div class="li"><div class="ln">٢</div><div class="lt">دفتر ملاحظات لتدوين النقاط المهمة أثناء الدراسة.</div></div>
+      </div>
+    </div>
+    <div class="wbox">
+      <span class="wi">⚠️</span>
+      <p><strong>مهم:</strong> إذا لاحظت ظهور شريط تمرير أو أن أي عنصر مقصوص، صغّر تكبير المتصفح (Ctrl و−) حتى تظهر الصفحة كاملة بدون تمرير.</p>
+    </div>
+</div>
+<div class="pnav"><button class="nb np" onclick="go(1)">→ السابق</button><button class="nb nn" onclick="go(3)">التالي ←</button></div>
+</div>
+
+<!-- PANEL 3 -->
+<div class="panel" id="p3">
+<div class="pbar"><div class="pic">🗺️</div><div><h2>كيفية التنقل داخل البيئة</h2><p>أدوات التنقل والوصول للمحتوى</p></div><div class="pbdg">٣ من ٨</div></div>
+<div class="pbody">
+    <div class="card">
+      <div class="ch"><span class="chi">🧭</span><span class="cht">شريط التنقل العلوي</span></div>
+      <div class="cb">
+        <div class="li"><div class="lic">🏠</div><div class="lt"><strong>الرئيسية:</strong> صفحة البداية ومعلومات البحث.</div></div>
+        <div class="li"><div class="lic">🎯</div><div class="lt"><strong>أهداف البيئة:</strong> ما ستتعلمه بنهاية دراستك.</div></div>
+        <div class="li"><div class="lic">📚</div><div class="lt"><strong>دليل التعلم:</strong> هذا الدليل الذي تقرؤه الآن.</div></div>
+        <div class="li"><div class="lic">📖</div><div class="lt"><strong>المحتوى التعليمي:</strong> الموديولات والدروس.</div></div>
+        <div class="li"><div class="lic">📢</div><div class="lt"><strong>لوحة الإعلانات:</strong> آخر التحديثات والمواعيد المهمة.</div></div>
+        <div class="li"><div class="lic">📞</div><div class="lt"><strong>اتصل بنا:</strong> التواصل مع المشرف الأكاديمي.</div></div>
+      </div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><span class="chi">📂</span><span class="cht">داخل كل موديول</span></div>
+        <div class="cb"><p style="font-size:11px;font-weight:600;color:var(--tm);line-height:1.7;">اضغط على أي درس في القائمة الجانبية لتفتح أقسامه الثلاثة: <strong>أهداف الدرس</strong>، <strong>محتوى الدرس</strong>، <strong>النشاط التعليمي</strong>.</p></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="chi">🤝</span><span class="cht">لوحة الدعم</span></div>
+        <div class="cb"><p style="font-size:11px;font-weight:600;color:var(--tm);line-height:1.7;">تظهر بجانب كل درس وتضيف نصائح جديدة باستمرار — مرّر لأعلى لمراجعة كل ما سبق.</p></div>
+      </div>
+    </div>
+</div>
+<div class="pnav"><button class="nb np" onclick="go(2)">→ السابق</button><button class="nb nn" onclick="go(4)">التالي ←</button></div>
+</div>
+
+<!-- PANEL 4 -->
+<div class="panel" id="p4">
+<div class="pbar"><div class="pic">📋</div><div><h2>خطوات الدراسة المنهجية</h2><p>اتبع هذه الخطوات بدقة داخل كل درس</p></div><div class="pbdg">٤ من ٨</div></div>
+<div class="pbody">
+    <div class="card">
+      <div class="ch"><span class="chi">📋</span><span class="cht">خطوات دراسة أي درس</span></div>
+      <div class="cb">
+        <div class="flow">
+          <div class="fs"><div class="fn">1</div><div><div class="ft">اقرأ أهداف الدرس</div><div class="fd">لتعرف ما المطلوب منك تحديدًا قبل البدء.</div></div></div>
+          <div class="fs"><div class="fn">2</div><div><div class="ft">ادرس المحتوى</div><div class="fd">نص وفيديو، أو إنفوجرافيك وفيديو — حسب الدرس.</div></div></div>
+          <div class="fs"><div class="fn">3</div><div><div class="ft">تابع نقاط الدعم</div><div class="fd">توجيهات تظهر تباعًا يسار الشاشة أثناء دراستك.</div></div></div>
+          <div class="fs"><div class="fn">4</div><div><div class="ft">نفّذ النشاط التعليمي</div><div class="fd">اكتب إجابتك في المساحة المخصصة بدقة.</div></div></div>
+          <div class="fs"><div class="fn">5</div><div><div class="ft">سلّم إجابتك</div><div class="fd">اضغط زر «تسليم الإجابة» ثم انتقل للدرس التالي.</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="hbox">
+      <div class="hbt">✅ نصيحة</div>
+      <p>لا تنتقل للدرس التالي قبل التأكد من فهم أهداف الدرس الحالي وتنفيذ نشاطه كاملًا.</p>
+    </div>
+</div>
+<div class="pnav"><button class="nb np" onclick="go(3)">→ السابق</button><button class="nb nn" onclick="go(5)">التالي ←</button></div>
+</div>
+
+<!-- PANEL 5 -->
+<div class="panel" id="p5">
+<div class="pbar"><div class="pic">📖</div><div><h2>دليل الموديولات والمحتوى التعليمي</h2><p>نظرة تفصيلية على الموديولات</p></div><div class="pbdg">٥ من ٨</div></div>
+<div class="pbody">
+    <div class="tbl-wrap">
+    <table class="gtbl">
+      <tr><th>الموديول</th><th>عدد الدروس</th><th>يغطّي</th></tr>
+      <tr><td><span class="badge bg">الموديول الثالث</span></td><td>7 دروس</td><td>أساسيات CourseLab: من التثبيت والتصميم الأول وحتى إدراج الأسئلة والاختبارات التفاعلية.</td></tr>
+      <tr><td><span class="badge bb">الموديول الرابع</span></td><td>3 دروس</td><td>نشر الدرس التفاعلي، التغذية الراجعة لمرحلة الإنتاج، ومرحلة التقويم الختامي.</td></tr>
+    </table>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><span class="chi">🔒</span><span class="cht">الدخول للموديولات</span></div>
+        <div class="cb"><p style="font-size:11px;font-weight:600;color:var(--tm);line-height:1.7;">كل موديول محمي بكلمة مرور يوفّرها لك المشرف — أدخلها من صفحة «المحتوى التعليمي».</p></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="chi">➡️</span><span class="cht">بعد إنهاء الموديولات</span></div>
+        <div class="cb"><p style="font-size:11px;font-weight:600;color:var(--tm);line-height:1.7;">بعد آخر درس بكل موديول ستجد بانرًا يوجّهك تلقائيًا للخطوة التالية.</p></div>
+      </div>
+    </div>
+</div>
+<div class="pnav"><button class="nb np" onclick="go(4)">→ السابق</button><button class="nb nn" onclick="go(6)">التالي ←</button></div>
+</div>
+
+<!-- PANEL 6 -->
+<div class="panel" id="p6">
+<div class="pbar"><div class="pic">💡</div><div><h2>إرشادات وتوجيهات الدراسة</h2><p>نصائح لتحقيق أقصى استفادة</p></div><div class="pbdg">٦ من ٨</div></div>
+<div class="pbody">
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><span class="chi">🤝</span><span class="cht">استفد من الدعم المستمر</span></div>
+        <div class="cb">
+          <div class="li"><div class="ln">١</div><div class="lt">راجع نقاط الدعم أول بأول — تُضاف تباعًا ولا تُحذف.</div></div>
+          <div class="li"><div class="ln">٢</div><div class="lt">مرّر لأعلى داخل لوحة الدعم لمراجعة أي نصيحة سابقة.</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="chi">⏱️</span><span class="cht">نظّم وقتك</span></div>
+        <div class="cb">
+          <div class="li"><div class="ln">١</div><div class="lt">خصص وقتًا كافيًا لكل درس دون استعجال.</div></div>
+          <div class="li"><div class="ln">٢</div><div class="lt">لا تؤجل تنفيذ الأنشطة لآخر الموديول.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="hbox">
+      <div class="hbt">💡 لتحقيق أقصى استفادة</div>
+      <p>شاهد الفيديو كاملًا، اقرأ المحتوى النصّي أو الإنفوجرافيك بتمعّن، ثم نفّذ النشاط بنفسك قبل الانتقال للدرس التالي — الفهم التراكمي أهم من السرعة.</p>
+    </div>
+    <div class="wbox">
+      <span class="wi">⚠️</span>
+      <p>لا تتخطَّ أي نشاط تعليمي — كل نشاط مرتبط مباشرة بتقييمك النهائي في الاختبار التحصيلي البعدي.</p>
+    </div>
+</div>
+<div class="pnav"><button class="nb np" onclick="go(5)">→ السابق</button><button class="nb nn" onclick="go(7)">التالي ←</button></div>
+</div>
+
+<!-- PANEL 7 -->
+<div class="panel" id="p7">
+<div class="pbar"><div class="pic">📝</div><div><h2>التقويم والاختبار التحصيلي</h2><p>كل ما تحتاج معرفته عن الاختبار</p></div><div class="pbdg">٧ من ٨</div></div>
+<div class="pbody">
+    <div class="card">
+      <div class="ch"><span class="chi">🧪</span><span class="cht">مسار التقويم في البيئة</span></div>
+      <div class="cb">
+        <div class="flow">
+          <div class="fs"><div class="fn">1</div><div><div class="ft">الاختبار التحصيلي القبلي</div><div class="fd">قبل دراسة المحتوى، لقياس مستواك المبدئي.</div></div></div>
+          <div class="fs"><div class="fn">2</div><div><div class="ft">دراسة الموديولات والأنشطة</div><div class="fd">الموديول الثالث ثم الرابع.</div></div></div>
+          <div class="fs"><div class="fn">3</div><div><div class="ft">الاختبار التحصيلي البعدي</div><div class="fd">بعد إتمام كل الدروس، لقياس ما تعلّمته.</div></div></div>
+          <div class="fs"><div class="fn">4</div><div><div class="ft">اختبار أسلوب التعلم</div><div class="fd">يفتح تلقائيًا بعد اجتياز البعدي بنجاح.</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="hbox">
+      <div class="hbt">📌 يهمّك معرفته</div>
+      <p>لن تظهر لك الإجابة الصحيحة أو درجة السؤال أثناء أداء أي اختبار — ستظهر نتيجتك وتصنيفك فقط بعد الانتهاء منه.</p>
+    </div>
+</div>
+<div class="pnav"><button class="nb np" onclick="go(6)">→ السابق</button><button class="nb nn" onclick="go(8)">التالي ←</button></div>
+</div>
+
+<!-- PANEL 8 -->
+<div class="panel" id="p8">
+<div class="pbar"><div class="pic">🎉</div><div><h2>التواصل والدعم الأكاديمي</h2><p>أنت جاهز للانطلاق!</p></div><div class="pbdg">٨ من ٨</div></div>
+<div class="pbody">
+    <div class="hbox">
+      <div class="hbt">🎉 أنت جاهز تمامًا للانطلاق!</div>
+      <p>راجعت أهم ما تحتاجه للتنقل والدراسة داخل البيئة. إن واجهتك أي صعوبة في أي وقت، تواصل معنا مباشرة.</p>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><span class="chi">📞</span><span class="cht">التواصل مع المشرف</span></div>
+        <div class="cb"><p style="font-size:11px;font-weight:600;color:var(--tm);line-height:1.7;">من صفحة «اتصل بنا» يمكنك المراسلة مباشرة عبر واتساب أو البريد الإلكتروني.</p></div>
+      </div>
+      <div class="card">
+        <div class="ch"><span class="chi">🤝</span><span class="cht">الدعم أثناء الدروس</span></div>
+        <div class="cb"><p style="font-size:11px;font-weight:600;color:var(--tm);line-height:1.7;">لوحة الدعم المستمرة بجانب كل درس تقدّم لك توجيهات فورية طوال دراستك.</p></div>
+      </div>
+    </div>
+    <div style="text-align:center;padding:6px 0;">
+      <a href="contact.html" class="cta">📞 تواصل معنا الآن</a>
+    </div>
+</div>
+<div class="pnav"><button class="nb np" onclick="go(7)">→ السابق</button><div style="font-size:10px;color:var(--mu);font-weight:700">🎉 أنهيت دليل المتعلم!</div></div>
+</div>
+
+</div><!-- /content -->
+</div><!-- /page -->
+<script>
+const STEPS=[
+    {n:1,t:'مرحباً بك في البيئة',s:'نظرة عامة',i:'🌟'},
+    {n:2,t:'متطلبات التعلم',s:'الجهاز والبرامج',i:'💻'},
+    {n:3,t:'التنقل داخل البيئة',s:'شريط التنقل والمسار',i:'🗺️'},
+    {n:4,t:'خطوات الدراسة',s:'الترتيب الصحيح',i:'📋'},
+    {n:5,t:'الموديولات والمحتوى',s:'الجداول والمحتوى',i:'📖'},
+    {n:6,t:'إرشادات وتوجيهات',s:'افعل وتجنب',i:'💡'},
+    {n:7,t:'التقويم والاختبار',s:'معلومات الاختبار',i:'📝'},
+    {n:8,t:'التواصل والدعم',s:'قنوات التواصل',i:'🎉'},
+];
+let cur=1;const vis=new Set([1]);
+function build(){
+    const l=document.getElementById('slist');l.innerHTML='';
+    STEPS.forEach(s=>{
+        const a=s.n===cur,d=vis.has(s.n)&&!a;
+        const b=document.createElement('button');
+        b.className='sbtn'+(a?' active':'')+(d?' done':'');
+        b.innerHTML=`<div class="sn">${d?'✓':s.i}</div><div class="st"><div class="stt">${s.t}</div><div class="sts">${s.s}</div></div><div class="dot"></div>`;
+        b.onclick=()=>go(s.n);l.appendChild(b);
+    });
+}
+function go(n){
+    document.getElementById('p'+cur).classList.remove('active');
+    cur=n;vis.add(n);
+    document.getElementById('p'+n).classList.add('active');
+    const p=Math.round(vis.size/STEPS.length*100);
+    document.getElementById('pf').style.width=p+'%';
+    document.getElementById('pp').textContent=p+'%';
+    build();
+}
+build();
+</script>
+</body>
+</html>

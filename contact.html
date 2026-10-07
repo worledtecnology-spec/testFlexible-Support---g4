@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اتصل بنا </title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg-main: #f0f4f4;
+    --bg-secondary: #1b4a4a;
+    --card-bg: #ffffff;
+    --primary: #1b6b5a;
+    --primary-light: #2dd4bf;
+    --accent: #0a8545;
+    --accent-soft: #0b703d;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --border: #d1fae5;
+    --nav-bg: #1b5e5e;
+}
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Cairo', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+
+/* ========== الهيدر ========== */
+.header {
+    background: var(--bg-secondary);
+    padding: 7px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: relative;
+    border-bottom: 2px solid #14b8a6;
+}
+
+.header-title {
+    font-size: clamp(13px, 1.9vw, 18px);
+    font-weight: 700;
+    color: #ffffff;
+    flex: 1 1 260px;
+    max-width: 100%;
+    margin: 0;
+    line-height: 1.5;
+    order: 1;
+    overflow-wrap: anywhere;
+}
+
+.support-badge {
+    position: static;
+    transform: none;
+    background: var(--accent);
+    color: #fff;
+    padding: 1px 16px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(10,133,69,0.35);
+    flex-shrink: 0;
+    order: 2;
+    white-space: nowrap;
+}
+
+/* ========== الناف بار ========== */
+.nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background: var(--nav-bg);
+    padding: 8px 16px;
+    flex-wrap: wrap;
+    border-bottom: 2px solid #0f766e;
+}
+
+.nav a {
+    color: #e0f2f1;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 50px;
+    border: 2px solid rgba(167, 243, 208, 0.5);
+    transition: all 0.3s ease;
+    background: transparent;
+    letter-spacing: 0.2px;
+}
+
+.nav a:hover {
+    background: #fff;
+    color: #1b5e5e;
+    border-color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+/* ========== Contact Section ========== */
+.page-content {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 55px 20px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.contact-card {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 40px 50px;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 8px 40px rgba(27,75,74,0.13);
+    border: 1.5px solid #d1fae5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    animation: fadeUp .5s ease both;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.contact-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: .5px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.contact-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0; right: 50%;
+    transform: translateX(50%);
+    width: 50px; height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 10px;
+}
+
+.contact-links {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.contact-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.contact-btn:hover { transform: translateY(-5px); }
+
+.contact-ico-wrap {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.13);
+    transition: box-shadow .25s ease;
+    overflow: hidden;
+}
+
+.contact-btn:hover .contact-ico-wrap {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.contact-ico-wrap.whatsapp {
+    background: linear-gradient(135deg, #25d366, #128c7e);
+}
+
+.contact-ico-wrap.gmail {
+    background: linear-gradient(135deg, #ea4335, #fbbc05);
+}
+
+.contact-ico-wrap svg {
+    width: 52px;
+    height: 52px;
+}
+
+.contact-btn span {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+/* ========== موبايل ========== */
+@media (max-width: 768px) {
+    .support-badge {
+        position: static;
+        transform: none;
+        display: inline-block;
+        margin-bottom: 10px;
+    }
+    .header { padding-top: 10px; }
+    .header-title { max-width: 100%; font-size: 15px; }
+    .nav a { font-size: 12px; padding: 5px 10px; }
+    .contact-card { padding: 30px 20px; }
+    .contact-ico-wrap { width: 82px; height: 82px; }
+    .contact-ico-wrap svg { width: 42px; height: 42px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="support-badge">✨ نمط الدعم المرن</div>
+    <div class="header-title">
+        بيئة التعلم المدمج لتنمية مهارات إنتاج الدروس التفاعلية لدى طلاب كلية التربية النوعية
+    </div>
+</div>
+
+<div class="nav">
+  <a href="home.html" target="_self">🏠 الرئيسية</a>
+  <a href="aims.html" target="_self">🎯 أهداف البيئة</a>
+  <a href="guied.html" target="_self">📚 دليل التعلم</a>
+  <a href="mods.html" target="_self">📖 المحتوى التعليمي</a>
+  <a href="poster.html" target="_self">📢 لوحة الإعلانات</a>
+  <a href="#" class="active" target="_self">📞 اتصل بنا</a>
+</div>
+
+<div class="page-content">
+  <div class="contact-card">
+
+    <div class="contact-title">اتصل بنا</div>
+
+    <div class="contact-links">
+
+      <!-- واتساب -->
+      <a class="contact-btn" href="https://wa.me/201106413664" target="_blank">
+        <div class="contact-ico-wrap whatsapp">
+          <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.52 3.48A11.93 11.93 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.22-1.57A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.22-3.48-8.52zm-8.52 18.4a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-3.69.93.99-3.59-.24-.37A9.9 9.9 0 0 1 2.1 12c0-5.46 4.44-9.9 9.9-9.9 2.64 0 5.12 1.03 6.99 2.9A9.84 9.84 0 0 1 21.9 12c0 5.46-4.44 9.88-9.9 9.88zm5.42-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15s-.77.97-.94 1.17c-.17.2-.34.22-.64.07a8.1 8.1 0 0 1-2.38-1.47 8.9 8.9 0 0 1-1.65-2.05c-.17-.3-.02-.46.13-.6.13-.13.3-.34.45-.51.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.79.37s-1.04 1.01-1.04 2.47 1.06 2.86 1.21 3.06c.15.2 2.08 3.17 5.04 4.45.7.3 1.25.48 1.68.62.7.22 1.34.19 1.85.12.56-.09 1.76-.72 2.01-1.41.25-.69.25-1.28.17-1.41-.07-.12-.27-.2-.57-.34z"/>
+          </svg>
+        </div>
+        <span>واتساب</span>
+      </a>
+
+      <!-- جيميل: يفتح Gmail عبر المتصفح بدل تطبيق البريد الافتراضي (Outlook) -->
+      <a class="contact-btn" href="https://mail.google.com/mail/?view=cm&fs=1&to=Salwastudents730@gmail.com" target="_blank" rel="noopener">
+        <div class="contact-ico-wrap gmail">
+          <svg viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L12 9.641l8.073-6.148C21.69 2.28 24 3.434 24 5.457z"/>
+          </svg>
+        </div>
+        <span>البريد الإلكتروني</span>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

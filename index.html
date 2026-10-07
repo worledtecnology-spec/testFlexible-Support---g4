@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول - بيئة التعلم المدمج</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg-main: #f0f4f4;
+    --bg-secondary: #1b4a4a;
+    --card-bg: #ffffff;
+    --primary: #1b6b5a;
+    --primary-light: #2dd4bf;
+    --accent: #0a8545;
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --nav-bg: #1b5e5e;
+    --border-color: #02311b;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    height: 100%;
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
+    overflow: hidden;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+}
+
+/* ===== HEADER ===== */
+.header {
+    background: var(--bg-secondary);
+    padding: 7px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    position: relative;
+    border-bottom: 2px solid #14b8a6;
+    flex-shrink: 0;
+}
+
+.header-title {
+    font-size: clamp(12px, 1.8vw, 16px);
+    font-weight: 700;
+    color: #fff;
+    flex: 1 1 260px;
+    max-width: 100%;
+    margin: 0;
+    line-height: 1.5;
+    order: 1;
+    overflow-wrap: anywhere;
+}
+
+.support-badge {
+    position: static;
+    transform: none;
+    background: var(--accent);
+    color: #fff;
+    padding: 1px 16px;
+    border-radius: 25px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(10,133,69,0.35);
+    flex-shrink: 0;
+    order: 2;
+    white-space: nowrap;
+}
+
+/* ===== NAV ===== */
+.nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background: var(--nav-bg);
+    padding: 8px 16px;
+    flex-wrap: wrap;
+    border-bottom: 2px solid #0f766e;
+    flex-shrink: 0;
+}
+
+.nav a {
+    color: #e0f2f1;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 13px;
+    border-radius: 50px;
+    border: 2px solid rgba(167,243,208,0.5);
+    transition: all 0.3s;
+}
+
+.nav a:hover {
+    background: #fff;
+    color: #1b5e5e;
+    border-color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
+
+.nav:empty { display: none; }
+
+/* ===== MAIN ===== */
+.main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* decorative circles */
+.main::before, .main::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.07;
+    background: var(--primary);
+    pointer-events: none;
+}
+.main::before { width: 400px; height: 400px; top: -100px; right: -100px; }
+.main::after  { width: 300px; height: 300px; bottom: -80px; left: -80px; }
+
+/* ===== LOGIN CARD ===== */
+.login-card {
+    background: #fff;
+    border: 3px solid var(--border-color);
+    border-radius: 28px;
+    padding: clamp(2px, 1.5vh, 18px) clamp(20px, 5vw, 40px);
+    width: 100%;
+    max-width: 460px;
+    max-height: 100%;
+    overflow-y: auto;
+    box-shadow: 0 12px 40px rgba(27,75,74,0.14);
+    position: relative;
+    z-index: 1;
+    animation: slideUp 0.5s ease forwards;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* lock icon */
+.lock-icon {
+    width: clamp(28px, 5vh, 40px);
+    height: clamp(28px, 5vh, 40px);
+    background: linear-gradient(135deg, #1b6b5a, #0a8545);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto clamp(6px, 2vh, 18px);
+    font-size: clamp(18px, 3.5vh, 30px);
+    box-shadow: 0 6px 18px rgba(27,107,90,0.3);
+    flex-shrink: 0;
+}
+
+.card-title {
+    text-align: center;
+    font-size: clamp(16px, 3vh, 22px);
+    font-weight: 900;
+    color: var(--primary);
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    text-align: center;
+    font-size: clamp(11px, 1.8vh, 14px);
+    color: var(--text-muted);
+    margin-bottom: clamp(8px, 3vh, 28px);
+    font-weight: 600;
+}
+
+/* ===== FORM ===== */
+.form-group {
+    margin-bottom: clamp(3px, 1vh, 4px);
+}
+
+.form-label {
+    display: block;
+    font-size: clamp(12px, 1.8vh, 14px);
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: clamp(3px, 1vh, 7px);
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.form-input {
+    width: 100%;
+    padding: clamp(8px, 1.8vh, 12px) 16px clamp(8px, 1.8vh, 12px) 44px;
+    border: 2px solid #d1fae5;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    color: var(--text-main);
+    background: #f8fffe;
+    transition: all 0.3s;
+    outline: none;
+    text-align: right;
+    direction: rtl;
+}
+
+.form-input:focus {
+    border-color: var(--primary);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(27,107,90,0.1);
+}
+
+.form-input::placeholder {
+    color: #b0bec5;
+    font-weight: 400;
+}
+
+/* ===== ERROR ===== */
+.error-msg {
+    display: none;
+    background: #fef2f2;
+    border: 1.5px solid #fca5a5;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: clamp(8px, 2vh, 18px);
+    color: #dc2626;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25%      { transform: translateX(-6px); }
+    75%      { transform: translateX(6px); }
+}
+
+/* ===== BUTTON ===== */
+.login-btn {
+    width: 100%;
+    padding: clamp(9px, 2vh, 14px);
+    background: linear-gradient(135deg, #1b6b5a 0%, #0a8545 100%);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: clamp(14px, 2.2vh, 17px);
+    font-family: 'Cairo', sans-serif;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 0.3px;
+    box-shadow: 0 6px 18px rgba(10,133,69,0.3);
+    margin-top: 4px;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(10,133,69,0.4);
+    background: linear-gradient(135deg, #155a4a 0%, #077538 100%);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+/* loading state */
+.login-btn.loading {
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+/* ===== FOOTER NOTE ===== */
+.card-note {
+    text-align: center;
+    margin-top: clamp(6px, 2vh, 20px);
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* ===== MOBILE / شاشات قصيرة ===== */
+@media (max-width: 768px) {
+    .header { padding-top: 10px; }
+    .header-title { max-width: 100%; font-size: 14px; }
+    .nav a { font-size: 11px; padding: 4px 9px; }
+    .login-card { border-radius: 20px; }
+}
+@media (max-height: 560px) {
+    .card-note { display: none; }
+    .card-subtitle { margin-bottom: 4px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+    <div class="support-badge">✨ نمط الدعم المرن</div>
+    <div class="header-title">
+        بيئة التعلم المدمج لتنمية مهارات إنتاج الدروس التفاعلية لدى طلاب كلية التربية النوعية
+    </div>
+</div>
+
+<!-- ===== NAV ===== -->
+<div class="nav">
+    
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+    <div class="login-card">
+
+        <div class="lock-icon">🔐</div>
+        <h1 class="card-title">تسجيل دخول الطلاب</h1>
+        <p class="card-subtitle">نمط الدعم المرن - اسلوب التعلم مستقل </p>
+
+        <div class="error-msg" id="errorMsg">⚠️ اسم المستخدم أو كلمة المرور غير صحيحة</div>
+
+        <div class="form-group">
+            <label class="form-label" for="username">اسم المستخدم</label>
+            <div class="input-wrapper">
+                <span class="input-icon">👤</span>
+                <input
+                    type="text"
+                    id="username"
+                    class="form-input"
+                    placeholder="أدخل اسم المستخدم"
+                    autocomplete="username"
+                    onkeyup="handleEnter(event)"
+                />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="password">كلمة المرور</label>
+            <div class="input-wrapper">
+                <span class="input-icon">🔒</span>
+                <input
+                    type="password"
+                    id="password"
+                    class="form-input"
+                    placeholder="أدخل كلمة المرور"
+                    autocomplete="current-password"
+                    onkeyup="handleEnter(event)"
+                />
+            </div>
+        </div>
+
+        <button class="login-btn" id="loginBtn" onclick="doLogin()">
+            تسجيل الدخول ←
+        </button>
+
+        <p class="card-note">🎓 هذه البيئة مخصصة لطلاب كلية التربية النوعية</p>
+    </div>
+</div>
+
+
+<script>
+// دخول مباشر: لا يوجد تحقق من اسم المستخدم أو كلمة المرور
+function doLogin() {
+    var btn = document.getElementById('loginBtn');
+    btn.textContent = '✅ جارٍ الدخول...';
+    btn.classList.add('loading');
+    window.location.href = 'home.html';
+}
+function handleEnter(event) {
+    if (event.key === 'Enter') doLogin();
+}
+</script>
+
+</body>
+</html>
