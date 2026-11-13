@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<script src="../testmain/env.js" data-site="g4"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة الإعلانات</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -235,7 +236,7 @@ body { display: flex; flex-direction: column; min-height: 100vh; overflow-x: hid
 <div class="nav">
     <a href="home.html" target="_self">🏠 الرئيسية</a>
     <a href="aims.html" target="_self">🎯 أهداف البيئة</a>
-    <a href="guied.html" target="_self">📚 دليل التعلم</a>
+    <a href="guied.html" target="_self">📘 دليل المتعلم</a>
     <a href="mods.html" target="_self">📖 المحتوى التعليمي</a>
     <a href="poster.html" class="active" target="_self">📢 لوحة الإعلانات</a>
     <a href="contact.html" target="_self">📞 اتصل بنا</a>
@@ -290,19 +291,18 @@ body { display: flex; flex-direction: column; min-height: 100vh; overflow-x: hid
                 <div class="ann-head">
                     <div class="ann-num"></div>
                     <div class="ann-meta">
-                        <div class="ann-title">تعليمات الدخول للبيئة وكلمات المرور</div>
+                        <div class="ann-title">تعليمات الدخول للبيئة</div>
                         <div class="ann-date">📅 بداية الفصل الدراسي</div>
                     </div>
                     <span class="ann-badge badge-urgent">🔴 عاجل</span>
                 </div>
                 <div class="ann-body">
                     <div class="ann-text">
-                        عزيزي المتعلم، للوصول إلى الموديولات التعليمية داخل البيئة تحتاج إلى <strong>كلمة مرور خاصة بكل موديول</strong>. يرجى التواصل مع الأستاذ المشرف للحصول على كلمات المرور الخاصة بمجموعتك. لا تشارك كلمة مرورك مع الآخرين.
-                    </div>
+                        عزيزي المتعلم، تدخل البيئة باسم <strong>المستخدم وكلمة المرور</strong> الخاصين بك، ثم تؤدي الاختبار القبلي واختبار أساليب التعلم، فيُفتح لك المحتوى التعليمي تلقائيًا في نمط الدعم المناسب لك. لا تشارك بيانات دخولك مع الآخرين.</div>
                     <button class="ann-expand-btn" onclick="toggleMore(this)">📌 تفاصيل إضافية ▼</button>
                     <div class="ann-more">
                         <div class="ann-more-list">
-                            <div class="aml-item"><span class="aml-icon">🔑</span> كلمة المرور مخصصة لك شخصياً ولمجموعتك الدراسية فقط</div>
+                            <div class="aml-item"><span class="aml-icon">🔑</span> اسم المستخدم وكلمة المرور مخصصان لك شخصياً، ويُسجَّل بهما دخولك وتقدّمك</div>
                             <div class="aml-item"><span class="aml-icon">📧</span> في حال نسيان كلمة المرور تواصل فوراً عبر صفحة "اتصل بنا"</div>
                             <div class="aml-item"><span class="aml-icon">⏰</span> الدخول للبيئة متاح على مدار اليوم دون قيود زمنية</div>
                             <div class="aml-item"><span class="aml-icon">🖥️</span> يُفضل استخدام Google Chrome للحصول على أفضل تجربة</div>

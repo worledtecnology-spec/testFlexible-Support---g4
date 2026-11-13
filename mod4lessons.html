@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<script src="../testmain/env.js" data-site="g4"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>المحتوى التعليمي</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -258,6 +259,32 @@ body { display: flex; flex-direction: column; height: 100vh; background: var(--b
 }
 .sidebar-toggle { display: none; }
 .sidebar-close { display: none; }
+/* ══ روابط المهارات في شاشة المحتوى (بدل التالي/السابق) ══ */
+.sk-bar { background:#fff; border:1px solid var(--border); border-radius:13px; box-shadow:0 2px 10px rgba(0,0,0,.06); padding:8px 10px; flex-shrink:0; }
+.sk-bar-hdr { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:12.5px; font-weight:800; color:var(--primary); margin-bottom:6px; }
+.sk-bar-hdr small { font-size:11px; font-weight:600; color:#6b7280; }
+.sk-download { margin-right:auto; background:var(--primary); color:#fff; text-decoration:none; font-size:11px; font-weight:700; padding:4px 12px; border-radius:7px; }
+.sk-links { display:flex; flex-wrap:wrap; gap:6px; max-height:28vh; overflow-y:auto; padding-bottom:2px; }
+.sk-link { display:inline-flex; align-items:center; gap:6px; border:1.5px solid #a7f3d0; background:#f0fdf9; color:#065f46; font-family:'Cairo',sans-serif; font-size:12px; font-weight:700; padding:4px 10px 4px 12px; border-radius:50px; cursor:pointer; transition:background-color .15s, border-color .15s; text-decoration:underline; text-underline-offset:3px; text-decoration-color:rgba(6,95,70,.35); }
+.sk-link:hover { background:#ccfbf1; border-color:#2dd4bf; }
+.sk-link .sk-n { background:#d1fae5; color:#065f46; border-radius:50%; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; text-decoration:none; }
+.sk-link.active { background:linear-gradient(135deg,var(--primary),var(--accent)); color:#fff; border-color:transparent; text-decoration:none; box-shadow:0 3px 10px rgba(10,133,69,.25); }
+.sk-link.active .sk-n { background:rgba(255,255,255,.25); color:#fff; }
+.sk-link.visited .sk-n::after { content:'✓'; }
+.sk-link.visited .sk-n { font-size:0; }
+.sk-link.visited .sk-n::after { font-size:11px; }
+.sk-step { display:inline-block; background:#eef6ff; color:#1e3a8a; border:1px solid #dbeafe; border-radius:20px; padding:1px 10px; font-size:11px; font-weight:800; margin:8px 0 4px; }
+.sk-badge { display:inline-block; background:#ecfdf5; color:var(--accent); border:1px solid #a7f3d0; border-radius:20px; padding:2px 10px; font-size:10.5px; font-weight:800; margin-bottom:6px; }
+.video-body.sk-img-mode { background:#fff; overflow-y:auto; }
+.sk-vids { display:flex; flex-direction:column; gap:12px; padding:8px; }
+.sk-vid { display:flex; flex-direction:column; background:#0f172a; border-radius:10px; overflow:hidden; }
+.sk-vid-t { background:#f0fdf9; color:#065f46; font-size:12px; font-weight:800; padding:6px 10px; border-bottom:1px solid #a7f3d0; }
+.sk-vid iframe { height:auto !important; aspect-ratio:16/9; min-height:0 !important; }
+.sk-imgs { display:flex; flex-direction:column; gap:10px; padding:8px; }
+.sk-fig { margin:0; text-align:center; }
+.sk-fig img { max-width:100%; max-height:46vh; object-fit:contain; border-radius:10px; cursor:zoom-in; box-shadow:0 2px 10px rgba(0,0,0,.08); }
+.sk-fig figcaption { font-size:11.5px; font-weight:700; color:#475569; margin-top:4px; }
+@media (max-width:900px){ .sk-split { grid-template-columns:1fr !important; } .sk-links { max-height:none; } }
 </style>
 </head>
 <body>
@@ -271,7 +298,7 @@ body { display: flex; flex-direction: column; height: 100vh; background: var(--b
 <div class="nav">
   <a href="home.html" target="_self">🏠 الرئيسية</a>
   <a href="aims.html" target="_self">🎯 أهداف البيئة</a>
-  <a href="guied.html" target="_self">📚 دليل التعلم</a>
+  <a href="guied.html" target="_self">📘 دليل المتعلم</a>
   <a href="mods.html" class="active" target="_self">📖 المحتوى التعليمي</a>
   <a href="poster.html" target="_self">📢 لوحة الإعلانات</a>
   <a href="contact.html" target="_self">📞 اتصل بنا</a>
@@ -754,7 +781,205 @@ function changeVideo(dir) {
 /* ══ الدالة الرئيسية ══ */
 let activeBtn = null;
 
+const SK_MODULE_NO = 4;
+
+/* ══════════════════════════════════════════════════════════════
+   شاشة المحتوى — التنقل بالروابط (بناءً على طلب د. أمل)
+   • لا يوجد زرا «التالي/السابق» داخل المحتوى؛ البيئة ليست برنامجًا تعليميًا خطيًا.
+   • كل مهارة لها رابط مستقل؛ الضغط عليه يعرض شرح المهارة + الفيديو/الصورة الخاصة بها.
+   • الخطوات الصغيرة التابعة لمهارة واحدة (مثل ١ من ٤ … ٤ من ٤) تُعرض معًا تحت رابط واحد.
+   • لا يوجد دعم في شاشة المحتوى — الدعم في النشاط التعليمي فقط.
+   • فيديو مستقل لكل مهارة: أضِف في data.js داخل content المصفوفة
+       videos: [ { stage: رقم_المهارة_من_0, title: "اسم المهارة", videoType: "youtube", videoSrc: "الرابط" } ]
+     وإن لم يوجد فيديو للمهارة يُعرض فيديو الدرس العام (videoSrc) بدلًا منه.
+   ══════════════════════════════════════════════════════════════ */
+window._sk = { skills: [], idx: -1, lid: '', mode: 'text', mediaSig: '', visited: {} };
+
+function skIsInfo(lid) {
+  return (SK_MODULE_NO === 4) ? (parseInt(lid, 10) % 2 === 0 || lid === '3') : (parseInt(lid, 10) % 2 === 0);
+}
+
+function getSkills(sec, lid) {
+  let raw;
+  if (sec.stages) {
+    raw = sec.stages.map(s => ({
+      title: (s.title || '').trim(), body: s.body || '', badge: s.badge || '',
+      media: (s.video && s.video.videoSrc) ? [Object.assign({ kind: 'video' }, s.video)] : []
+    }));
+  } else {
+    raw = parseStages(sec.content).map((s, i) => {
+      const media = [];
+      (sec.videos || []).filter(v => v.stage === i && v.videoSrc).forEach(v => media.push(Object.assign({ kind: 'video' }, v)));
+      (sec.images || []).filter(im => im.stage === i).forEach(im => media.push(Object.assign({ kind: 'image' }, im)));
+      return { title: s.title, body: s.body, badge: '', media };
+    });
+  }
+  /* فيديو الدرس العام يُعرض لأي مهارة ليس لها فيديو/صورة خاصة بها */
+  const lessonVideo = (sec.videoSrc && sec.videoType && sec.videoType !== 'none')
+    ? { kind: 'video', title: 'الفيديو التعليمي للدرس', videoSrc: sec.videoSrc, videoType: sec.videoType, lessonLevel: true } : null;
+  if (lessonVideo) raw.forEach(s => { if (!s.media.length) s.media = [lessonVideo]; });
+
+  /* دمج أجزاء المهارة الواحدة «(١ من ٤)…» تحت رابط واحد */
+  const out = [];
+  raw.forEach(s => {
+    const base = s.title.replace(/\s*[\(（][^()（）]*\sمن\s[^()（）]*[\)）]\s*$/, '').trim();
+    const last = out[out.length - 1];
+    if (last && base !== s.title && last._base === base) {
+      last.parts.push(s);
+      s.media.forEach(m => { if (!last.media.some(x => (x.videoSrc || x.src) === (m.videoSrc || m.src))) last.media.push(m); });
+    } else {
+      out.push({ _base: base, title: base, badge: s.badge, parts: [s], media: s.media.slice() });
+    }
+  });
+  return out;
+}
+
+function buildSkillsPanel(sec, lid) {
+  const skills = getSkills(sec, lid);
+  const mode = skIsInfo(lid) ? 'info' : 'text';
+  window._sk = { skills, idx: -1, lid, mode, mediaSig: '', visited: {} };
+  if (!skills.length) return '<div class="card"><div class="card-body"><p>لا يوجد محتوى بعد.</p></div></div>';
+
+  const links = skills.map((s, i) =>
+    `<button class="sk-link" id="sk-link-${i}" onclick="showSkill(${i})"><span class="sk-n">${i + 1}</span><span class="sk-t">${s.title}</span></button>`
+  ).join('');
+
+  const downloadBtn = (SK_MODULE_NO === 3 && lid === '2')
+    ? `<a class="sk-download" href="files/w1.docx" download>📥 تحميل خطوات تثبيت البرنامج</a>` : '';
+
+  return `
+    <div class="sk-bar">
+      <div class="sk-bar-hdr">🔗 روابط المهارات <small>اضغط على المهارة لعرض شرحها والفيديو الخاص بها</small>${downloadBtn}</div>
+      <div class="sk-links">${links}</div>
+    </div>
+    <div class="split sk-split" id="sk-split" style="flex:1;min-height:0;">
+      <div class="card ${mode === 'info' ? 'info-card' : ''}" id="sk-text-card">
+        <div class="card-hdr"><div class="dot" ${mode === 'info' ? 'style="background:#fff;"' : ''}></div> <span id="sk-text-hdr">${mode === 'info' ? '📊 إنفوجرافيك — المهارة' : 'شرح المهارة'}</span></div>
+        <div class="${mode === 'info' ? 'info-body' : 'card-body'}" id="sk-text" style="flex:1;overflow-y:auto;overflow-x:hidden;"></div>
+      </div>
+      <div class="card video-card" id="sk-media-card">
+        <div class="card-hdr"><div class="dot red"></div> <span id="sk-media-hdr">الفيديو التعليمي</span></div>
+        <div class="video-body" id="sk-media" style="flex:1;min-height:0;position:relative;"></div>
+      </div>
+    </div>`;
+}
+
+function skVideoHTML(v, isActivation) {
+  if (v.videoType === 'youtube' && v.videoSrc) {
+    const id = getYouTubeID(v.videoSrc);
+    if (id) {
+      const extra = isActivation ? '&enablejsapi=1' : '';
+      const idAttr = isActivation ? ' id="ytActivationPlayer"' : '';
+      return `<iframe${idAttr} src="https://www.youtube.com/embed/${id}?rel=0&modestbranding=1${extra}" allowfullscreen style="width:100%;height:100%;border:none;flex:1;min-height:180px;"></iframe>`;
+    }
+  }
+  if (v.videoType === 'local' && v.videoSrc)
+    return `<video controls style="width:100%;height:100%;background:#000"><source src="${v.videoSrc}"></video>`;
+  return `<div class="video-ph"><div class="play-btn">▶</div><div class="vid-lbl">${v.title || ''}</div></div>`;
+}
+
+function skImageHTML(im) {
+  const alt = (im.alt || im.caption || 'صورة توضيحية').replace(/"/g, '&quot;');
+  return `<figure class="sk-fig">
+      <img src="${im.src}" alt="${alt}" onclick="skZoom(this.src)" title="اضغط لتكبير الصورة"
+           onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'video-ph',textContent:'تعذر تحميل الصورة'}))">
+      ${im.caption ? `<figcaption>${im.caption}</figcaption>` : ''}
+    </figure>`;
+}
+
+function skZoom(src) {
+  if (typeof openImageZoom === 'function') return openImageZoom(src);
+  let ov = document.getElementById('skZoomOv');
+  if (!ov) {
+    ov = document.createElement('div'); ov.id = 'skZoomOv';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,25,.92);z-index:6000;display:flex;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;';
+    ov.innerHTML = '<img style="max-width:94%;max-height:94%;object-fit:contain;border-radius:10px;">';
+    ov.onclick = () => { ov.style.display = 'none'; };
+    document.body.appendChild(ov);
+  }
+  ov.querySelector('img').src = src; ov.style.display = 'flex';
+}
+
+function showSkill(i) {
+  const st = window._sk;
+  const s = st.skills[i];
+  if (!s || !document.getElementById('sk-text')) return;   /* انتقل المستخدم لقسم آخر قبل العرض */
+  if (window.ENV && !st.visited[i]) ENV.track('skill', { module: SK_MODULE_NO, lesson: String(st.lid), skill: s.title });
+  st.idx = i; st.visited[i] = true;
+
+  /* ── النص ── */
+  const textEl = document.getElementById('sk-text');
+  const badge = s.badge ? `<div class="sk-badge">${s.badge}</div>` : '';
+  if (st.mode === 'info') {
+    textEl.innerHTML = badge + s.parts.map((p, k) => `
+      <div class="info-stage">
+        <div class="info-num">${s.parts.length > 1 ? (k + 1) : (i + 1)}</div>
+        <div class="info-stage-body">
+          ${k === 0 ? `<div class="info-stage-title">${s.title}</div>` : ''}
+          ${renderStageBody(p.body, 'info')}
+        </div>
+      </div>`).join('');
+  } else {
+    textEl.innerHTML = badge + `<h4 style="margin-top:0;">${s.title}</h4>` +
+      s.parts.map((p, k) => (s.parts.length > 1 ? `<div class="sk-step">الخطوة ${k + 1} من ${s.parts.length}</div>` : '') +
+        renderStageBody(p.body, 'text')).join('');
+  }
+  textEl.scrollTop = 0;
+
+  /* ── الوسائط (لا يُعاد تحميل نفس الفيديو عند التنقل بين مهارات تشترك فيه) ── */
+  const card = document.getElementById('sk-media-card');
+  const split = document.getElementById('sk-split');
+  const body = document.getElementById('sk-media');
+  const hdr = document.getElementById('sk-media-hdr');
+  const sig = s.media.map(m => m.videoSrc || m.src).join('|');
+  if (!s.media.length) {
+    card.style.display = 'none';
+    split.style.gridTemplateColumns = '1fr';
+    stopActivationIfAny();
+    st.mediaSig = '';
+  } else {
+    card.style.display = 'flex';
+    split.style.gridTemplateColumns = '';
+    const vids = s.media.filter(m => m.kind === 'video');
+    const imgs = s.media.filter(m => m.kind === 'image');
+    hdr.textContent = vids.length
+      ? (vids[0].lessonLevel ? 'الفيديو التعليمي للدرس' : (vids.length > 1 ? 'فيديوهات المهارة (' + vids.length + ')' : 'فيديو المهارة: ' + (vids[0].title || s.title)))
+      : (imgs.length > 1 ? 'الصور التوضيحية للمهارة (' + imgs.length + ')' : (imgs[0].caption || imgs[0].alt || 'صورة توضيحية'));
+    if (sig !== st.mediaSig) {
+      stopActivationIfAny();
+      const isActivation = (SK_MODULE_NO === 3 && st.lid === '2' && vids.length && vids[0].lessonLevel);
+      let html = '';
+      if (vids.length === 1) html += skVideoHTML(vids[0], isActivation);
+      else if (vids.length > 1) html += '<div class="sk-vids">' + vids.map((v, k) =>
+        `<div class="sk-vid"><div class="sk-vid-t">▶ فيديو ${k + 1}: ${v.title || ''}</div>${skVideoHTML(v, false)}</div>`).join('') + '</div>';
+      if (isActivation) html += `
+        <div class="yt-callout" id="ytActivationCallout">
+          First name: <b>ahmed</b><br>Last name: <b>Hassan</b><br>Country: <b>egypt</b><br>
+          Company: <b>future</b><br>e-mail: <b>ah1040@hotmail.com</b><br>Activation Code: <b>9383</b>
+        </div>`;
+      if (imgs.length) html += `<div class="sk-imgs">${imgs.map(skImageHTML).join('')}</div>`;
+      body.className = 'video-body' + (isActivation ? ' has-callout' : '') + ((!vids.length || vids.length > 1) ? ' sk-img-mode' : '');
+      body.innerHTML = html;
+      st.mediaSig = sig;
+      if (isActivation && typeof setupActivationCallout === 'function') setTimeout(setupActivationCallout, 50);
+    }
+  }
+
+  /* ── حالة الروابط ── */
+  st.skills.forEach((_, k) => {
+    const b = document.getElementById('sk-link-' + k);
+    if (!b) return;
+    b.classList.toggle('active', k === i);
+    b.classList.toggle('visited', !!st.visited[k] && k !== i);
+  });
+}
+
+function stopActivationIfAny() {
+  if (typeof stopActivationCallout === 'function') stopActivationCallout();
+}
+
 function showContent(lid, sk, btn) {
+  if (window.ENV) ENV.track('view', { module: SK_MODULE_NO, lesson: String(lid), section: sk });
   stopSupport();
   closeMobileSidebarIfOpen();
 
@@ -779,59 +1004,11 @@ function showContent(lid, sk, btn) {
       </div>` + noteBar;
   }
 
-  /* ── محتوى: نص + شريط دعم + وسائط ثابتة بجوار المحتوى، تتزامن مع المرحلة الحالية
-     (فيديو خاص بكل مرحلة له الأولوية، وإلا صورة خاصة بها، وإلا يتوسع شريط الدعم) ── */
+  /* ── محتوى: روابط المهارات — كل رابط يعرض شرح المهارة + الفيديو/الصورة الخاصة بها
+        (بدون أزرار التالي/السابق، وبدون دعم في شاشة المحتوى؛ الدعم في النشاط فقط) ── */
   else if (sk === 'content') {
-    currentSupMessages = sec.support || [];
-    const stagedVideos = sec.videos && sec.videos.length > 0 && sec.videos.every(v => typeof v.stage === 'number');
-    const legacyGallery = sec.videos && sec.videos.length > 0 && !stagedVideos;
-    const legacyVideo   = !sec.videos?.length && sec.videoSrc && sec.videoSrc.trim() !== '';
-    const hasImages     = sec.images && sec.images.length > 0;
-    const hasMedia      = stagedVideos || legacyGallery || legacyVideo || hasImages;
-
-    const supStripToggleHTML = `
-              <!-- الحالة المغلقة: زر عرض الدعم -->
-              <div id="supStripClosed" style="display:flex;align-items:center;gap:10px;width:100%;">
-                <div class="sup-strip-ico">💡</div>
-                <span style="flex:1;color:rgba(255,255,255,.88);font-size:12.5px;">هل تحتاج مساعدة في فهم المحتوى؟</span>
-                <button class="sup-open-btn" onclick="openStripSupport()">▶ عرض الدعم</button>
-              </div>
-              <!-- الحالة المفتوحة: رسالة الدعم + زر إغلاق -->
-              <div id="supStripOpen" style="display:none;align-items:center;gap:10px;width:100%;">
-                <div class="sup-strip-ico">💡</div>
-                <div class="sup-strip-msg" id="supStripMsg" style="flex:1;"></div>
-                <button class="sup-close-btn" onclick="closeStripSupport()">✕ إخفاء</button>
-              </div>`;
-
-    if (hasMedia) {
-      const mediaCardHTML = legacyGallery
-        ? makeMultiVideoCard(sec.videos)
-        : legacyVideo
-          ? `<div class="card video-card">
-               <div class="card-hdr"><div class="dot red"></div> الفيديو التعليمي</div>
-               <div class="video-body">${makeVideoHTML(sec, meta, lid)}</div>
-             </div>`
-          : makeMediaSlotCard('lessonViewer');
-
-      panel.innerHTML = bc + hdr + `
-        <div class="split" style="flex:1;min-height:0;">
-          ${makeTextCard(sec, lid)}
-          <div class="con-right">
-            <div class="sup-strip" id="supStrip">${supStripToggleHTML}
-            </div>
-            ${mediaCardHTML}
-          </div>
-        </div>` + noteBar;
-    } else {
-      /* لا يوجد فيديو ولا صورة لهذا الدرس — نعرض شريط الدعم أعلى بطاقة المحتوى بعرض كامل دون ترك مكان فارغ */
-      panel.innerHTML = bc + hdr + `
-        <div class="split" style="flex:1;min-height:0;grid-template-columns:1fr;grid-template-rows:auto 1fr;">
-          <div class="sup-strip" id="supStrip">${supStripToggleHTML}
-          </div>
-          ${makeTextCard(sec, lid)}
-        </div>` + noteBar;
-    }
-    setTimeout(() => renderStageInto('lessonViewer'), 0);
+    panel.innerHTML = bc + hdr + buildSkillsPanel(sec, lid) + noteBar;
+    setTimeout(() => showSkill(0), 0);
   }
 
   /* ── نشاط: عمودان — أيمن: وصف + محتوى + إجابة | أيسر: دعم مصغّر ── */
@@ -839,14 +1016,14 @@ function showContent(lid, sk, btn) {
     currentSupMessages = sec.support || [];
     /* بانر الانتقال لأداء الاختبار التحصيلي البعدي — يظهر فقط بعد آخر درس (الدرس 3) */
     const postTestBanner = (lid === '3') ? `
-      <a href="#" onclick="alert('⚠️ لم يتم إضافة رابط الاختبار التحصيلي البعدي بعد. يرجى مراجعة المشرف.'); return false;"
+      <a href="${ENV.url('main','pretest.html')}#post"
         style="flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:8px;
         background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;text-decoration:none;
         padding:9px 14px;border-radius:12px;font-size:12.5px;font-weight:800;margin-bottom:8px;
         box-shadow:0 3px 12px rgba(124,58,237,.3);">
-        🎉 أحسنت! أنهيت جميع دروس الموديول الرابع — 🏁 انتقل لأداء الاختبار التحصيلي البعدي
+        🎉 أحسنت! أنهيت جميع دروس الموديول الرابع — 🏁 انتقل الآن لأداء الاختبار التحصيلي البعدي (الخطوة الأخيرة)
       </a>
-      <!-- ★ ضع رابط الاختبار التحصيلي البعدي هنا: عدّل السطر أعلاه بإضافة href="رابط الاختبار" واحذف onclick ★ -->` : '';
+      <!-- يفتح صفحة التقويم مباشرة على الاختبار التحصيلي البعدي (آخر شاشة في البيئة) -->` : '';
 
     panel.innerHTML = bc + hdr + postTestBanner + `
       <div class="split" style="flex:1;min-height:0;grid-template-columns:7fr 3fr;">
@@ -932,6 +1109,8 @@ function submitActivity(lid, lessonTitle) {
     alert('⚠️ الرجاء كتابة إجابتك قبل التسليم.');
     return;
   }
+  /* حفظ الإجابة في قاعدة البيانات لتراها الباحثة في لوحة المتابعة */
+  if (window.ENV) ENV.saveActivity(SK_MODULE_NO, lid, lessonTitle, answer.trim());
   try {
     const key = 'activityAnswer_lesson_' + lid;
     localStorage.setItem(key, answer.trim());
