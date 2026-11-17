@@ -472,6 +472,36 @@ function toggleMore(btn) {
 initBoard();
 applyFilters();
 
+/* ══ إعلانات الباحثة (من لوحة الباحثة) تظهر أعلى اللوحة ══ */
+(function loadResearcherAnn() {
+    if (!window.ENV || !ENV.fb) return;
+    const sc = document.querySelector('script[data-site]');
+    const SITE = sc ? sc.getAttribute('data-site') : '';
+    const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    ENV.fb().then(db => {
+        if (!db) return;
+        return db.collection('announcements').get().then(q => {
+            const list = [];
+            q.forEach(d => { const a = d.data(); if (a.active !== false && (!a.target || a.target === 'all' || a.target === SITE)) list.push(a); });
+            list.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
+            if (!list.length) return;
+            const grid = document.getElementById('annGrid');
+            const html = list.map(a => {
+                const t = a.type === 'urgent' ? 'urgent' : 'info';
+                const d = a.createdAt ? new Date(a.createdAt).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+                return `<div class="ann-card ${t}" data-type="${t}" style="border-width:2px;">
+                  <div class="ann-head"><div class="ann-num"></div>
+                    <div class="ann-meta"><div class="ann-title">📢 ${esc(a.title)}</div><div class="ann-date">📅 ${esc(d)} — من الباحثة</div></div>
+                    <span class="ann-badge badge-${t}">${t === 'urgent' ? '🔴 عاجل' : '🔵 تذكير'}</span></div>
+                  <div class="ann-body"><div class="ann-text" style="white-space:pre-wrap;">${esc(a.text)}</div></div>
+                </div>`;
+            }).join('');
+            grid.insertAdjacentHTML('afterbegin', html);
+            initBoard(); applyFilters();
+        });
+    }).catch(() => {});
+})();
+
 /* ══ حساب ارتفاع الشريط العلوي فعليًا وتمريره كمتغيّر CSS
    حتى تلتصق اللوحة الجانبية أسفله بدقّة على أي مقاس شاشة أو مستوى تكبير ══ */
 function updateTopbarHeight() {

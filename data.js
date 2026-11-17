@@ -157,17 +157,24 @@ const LESSONS_DATA = {
       },
             content: {
         content: `
-          <h4>الخطوة 1: تحميل البرنامج</h4>
+          <h4>تحميل البرنامج</h4>
           <p>يتم تحميل برنامج CourseLab من خلال النقر على الرابط التالي:</p>
-          <p><a href="https://courselab.software.informer.com/download/?ca1acdfa" target="_blank" rel="noopener noreferrer">تحميل برنامج CourseLab</a></p>
-          <p>بعد النقر على الرابط والضغط على Enter، يتم تنزيل البرنامج في صورة ملف مضغوط داخل مجلد Downloads.</p>
-          <h4>الخطوة 2: الوصول إلى الملف وفك الضغط</h4>
-          <p>يتم ذلك بالنقر على <mark style="background:#ffe066;color:#1a1a1a;padding:2px 8px;border-radius:4px;font-weight:bold;">تحميل خطوات التثبيت</mark>، ثم اتباع الخطوات كما هي موضحة بالصور في ملف الورد الذي قمت بتنزيله.</p>
-          <h4>الخطوة 3: خطوات التفعيل</h4>
-          <p>تُكتب بيانات التفعيل كما هي في الشاشة الافتتاحية:</p>
+          <p><a href="https://courselab.software.informer.com/download/?ca1acdfa" target="_blank" rel="noopener noreferrer">📥 تحميل برنامج CourseLab</a></p>
+          <p>بعد النقر على الرابط يتم تنزيل البرنامج في صورة ملف مضغوط داخل مجلد التنزيلات Downloads.</p>
+          <h4>الوصول إلى الملف وفك الضغط والتثبيت</h4>
+          <p>يمكنك تنزيل خطوات التثبيت مصوّرة في ملف Word بالنقر على الرابط التالي:</p>
+          <p><a href="files/w1.docx" download>📥 تحميل خطوات التثبيت</a></p>
+          <p>ويتم الوصول إلى الملف وتثبيت البرنامج كما يلي (والصور التوضيحية على اليسار):</p>
+          <obj n="1">بعد انتهاء التنزيل افتح صفحة التنزيلات Downloads في المتصفح، فيظهر الملف المضغوط courselab_2_installer.zip.</obj>
+          <obj n="2">انقر على Show in folder، فيُفتح مجلد Downloads ويظهر الملف محددًا باللون الأزرق.</obj>
+          <obj n="3">فك الضغط بالنقر مرتين متتاليتين على الملف المضغوط.</obj>
+          <obj n="4">بعد فك الضغط تظهر أيقونة التثبيت courselab_2_installer؛ انقر عليها مرتين لبدء تثبيت البرنامج، ثم تابع نوافذ معالج التثبيت حتى نهايته.</obj>
+          <h4>خطوات التفعيل</h4>
+          <p>عند فتح البرنامج لأول مرة تظهر شاشة التفعيل.</p>
+          <p><b>⚠️ تنبيه مهم:</b> البيانات التالية <b>ليست بياناتك الشخصية</b>، بل هي بيانات التفعيل الخاصة بالبرنامج؛ اكتبها كما هي تمامًا حرفًا بحرف، <b>ولا تكتب اسمك أو بريدك الإلكتروني</b>، لأن كود التفعيل (9383) يعمل مع هذه البيانات فقط.</p>
           <obj n="1">افصل الإنترنت أولاً قبل فتح البرنامج.</obj>
-          <obj n="2">First name: ahmed — Last name: Hassan — Country: egypt — Company: future — e-mail: ah1040@hotmail.com</obj>
-          <obj n="3">كود التفعيل هو 9383</obj>
+          <obj n="2">اكتب في الحقول: First name: ahmed — Last name: Hassan — Country: egypt — Company: future — e-mail: ah1040@hotmail.com</obj>
+          <obj n="3">اكتب كود التفعيل: 9383 ثم اضغط موافق.</obj>
           <h4>إنشاء مقرر جديد</h4>
           <p>من قائمة File ← New ← Course، يظهر المعالج لإدخال: اسم المقرر، مجلد التخزين، اسم الوحدة الأولى والقالب المناسب.</p>
           <h4>مكونات الواجهة الرئيسية</h4>
@@ -175,6 +182,12 @@ const LESSONS_DATA = {
           <obj n="ب">نافذة الموديولات المفتوحة: في الوسط، تضم منطقة الشرائح ومنطقة العمل والتحرير.</obj>
           <obj n="ج">قائمة المهام Task Pane: على اليمين، توفر: هيكلية الإطار، مكتبة العنصر، الأشكال التلقائية، السيناريوهات، ونماذج التصميم.</obj>
         `,
+        images: [
+          { stage: 1, src: "img/l2-1-downloads.png", alt: "صفحة التنزيلات", caption: "١) الملف المضغوط في صفحة التنزيلات Downloads" },
+          { stage: 1, src: "img/l2-2-folder.png", alt: "مجلد التنزيلات", caption: "٢) بالنقر على Show in folder يظهر الملف محددًا باللون الأزرق" },
+          { stage: 1, src: "img/l2-3-rar.png", alt: "الملف المضغوط", caption: "٣) فك الضغط بالنقر مرتين متتاليتين" },
+          { stage: 1, src: "img/l2-4-installer.jpeg", alt: "أيقونة التثبيت", caption: "٤) أيقونة التثبيت بعد فك الضغط" }
+        ],
         // باقي الحقول (videoSrc, videoType, note, support) بدون تغيير
         videoSrc: "https://www.youtube.com/embed/BJu6aJt1STY?si=pcZpP6J2Eom9p-9I", videoType: "youtube",
         note: "احفظ بيانات التفعيل في مكان آمن للرجوع إليها عند الحاجة.",

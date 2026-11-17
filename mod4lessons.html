@@ -285,6 +285,21 @@ body { display: flex; flex-direction: column; height: 100vh; background: var(--b
 .sk-fig img { max-width:100%; max-height:46vh; object-fit:contain; border-radius:10px; cursor:zoom-in; box-shadow:0 2px 10px rgba(0,0,0,.08); }
 .sk-fig figcaption { font-size:11.5px; font-weight:700; color:#475569; margin-top:4px; }
 @media (max-width:900px){ .sk-split { grid-template-columns:1fr !important; } .sk-links { max-height:none; } }
+
+/* قائمة المهارات المنسدلة أسفل «محتوى الدرس» في القائمة الجانبية */
+.sub-btn .sk-caret { margin-right:auto; font-size:10px; opacity:.7; transition:transform .2s; }
+.sub-btn.active .sk-caret { transform:rotate(180deg); }
+.sk-dd { display:none; flex-direction:column; gap:2px; margin:2px 16px 6px 2px; padding-right:8px; border-right:2px solid #a7f3d0; }
+.sk-dd.open { display:flex; }
+.sk-item { display:flex; align-items:flex-start; gap:7px; background:transparent; border:none; border-radius:6px; padding:5px 8px; cursor:pointer; font-family:'Cairo',sans-serif; font-size:11.5px; font-weight:600; color:#065f46; text-align:right; line-height:1.55; width:100%; transition:background-color .15s; }
+.sk-item:hover { background:#f0fdf9; }
+.sk-item .sk-dot { width:7px; height:7px; border-radius:50%; background:#a7f3d0; margin-top:7px; flex-shrink:0; }
+.sk-item.active { background:#d1fae5; color:#064e3b; font-weight:800; }
+.sk-item.active .sk-dot { background:#0a8545; box-shadow:0 0 0 3px rgba(10,133,69,.15); }
+.sk-item.visited .sk-dot { background:#10b981; }
+.sk-hint { flex-shrink:0; font-size:11.5px; font-weight:700; color:#065f46; background:#f0fdf9; border:1px dashed #a7f3d0; border-radius:10px; padding:6px 10px; }
+.sk-mob { display:none; }
+@media (max-width:900px){ .sk-mob { display:block; width:100%; padding:8px; border-radius:10px; border:1.5px solid #a7f3d0; font-family:'Cairo',sans-serif; font-size:13px; background:#fff; } .sk-hint-desk { display:none; } }
 </style>
 </head>
 <body>
@@ -362,8 +377,8 @@ Object.keys(LESSONS_DATA).forEach(id => {
     <div class="lesson-sub" id="ls-${id}">
       ${Object.keys(SEC_META).map(sk=>`
         <button class="sub-btn" onclick="showContent('${id}','${sk}',this)">
-          <span class="bico">${SEC_META[sk].icon}</span>${SEC_META[sk].label}
-        </button>`).join('')}
+          <span class="bico">${SEC_META[sk].icon}</span>${SEC_META[sk].label}${sk === 'content' ? '<span class="sk-caret">▾</span>' : ''}
+        </button>${sk === 'content' ? `<div class="sk-dd" id="skdd-${id}"></div>` : ''}`).join('')}
     </div>`;
   document.getElementById('lessonsList').appendChild(g);
 });
@@ -828,10 +843,14 @@ function getSkills(sec, lid) {
       last.parts.push(s);
       s.media.forEach(m => { if (!last.media.some(x => (x.videoSrc || x.src) === (m.videoSrc || m.src))) last.media.push(m); });
     } else {
-      out.push({ _base: base, title: base, badge: s.badge, parts: [s], media: s.media.slice() });
+      out.push({ _base: base, title: base.replace(/^الخطوة\s*[^:：]{1,8}[:：]\s*/, ''), badge: s.badge, parts: [s], media: s.media.slice() });
     }
   });
   return out;
+}
+
+function skClearDropdowns() {
+  document.querySelectorAll('.sk-dd').forEach(d => { d.innerHTML = ''; d.classList.remove('open'); });
 }
 
 function buildSkillsPanel(sec, lid) {
@@ -840,18 +859,17 @@ function buildSkillsPanel(sec, lid) {
   window._sk = { skills, idx: -1, lid, mode, mediaSig: '', visited: {} };
   if (!skills.length) return '<div class="card"><div class="card-body"><p>لا يوجد محتوى بعد.</p></div></div>';
 
-  const links = skills.map((s, i) =>
-    `<button class="sk-link" id="sk-link-${i}" onclick="showSkill(${i})"><span class="sk-n">${i + 1}</span><span class="sk-t">${s.title}</span></button>`
+  /* أسماء المهارات تظهر في قائمة منسدلة أسفل «محتوى الدرس» في القائمة الجانبية (بدون ترقيم «خطوة ١، خطوة ٢») */
+  const items = skills.map((s, i) =>
+    `<button class="sk-item" id="sk-link-${i}" onclick="showSkill(${i});closeMobileSidebarIfOpen()"><span class="sk-dot"></span><span class="sk-t">${s.title}</span></button>`
   ).join('');
-
-  const downloadBtn = (SK_MODULE_NO === 3 && lid === '2')
-    ? `<a class="sk-download" href="files/w1.docx" download>📥 تحميل خطوات تثبيت البرنامج</a>` : '';
+  skClearDropdowns();
+  const dd = document.getElementById('skdd-' + lid);
+  if (dd) { dd.innerHTML = items; dd.classList.add('open'); }
+  const mob = `<select class="sk-mob" id="sk-mob" onchange="showSkill(+this.value)">${skills.map((s, i) => `<option value="${i}">${s.title}</option>`).join('')}</select>`;
 
   return `
-    <div class="sk-bar">
-      <div class="sk-bar-hdr">🔗 روابط المهارات <small>اضغط على المهارة لعرض شرحها والفيديو الخاص بها</small>${downloadBtn}</div>
-      <div class="sk-links">${links}</div>
-    </div>
+    <div class="sk-hint"><span class="sk-hint-desk">📑 اختر المهارة من القائمة المنسدلة أسفل «محتوى الدرس» في القائمة الجانبية لعرض شرحها والفيديو الخاص بها.</span>${mob}</div>
     <div class="split sk-split" id="sk-split" style="flex:1;min-height:0;">
       <div class="card ${mode === 'info' ? 'info-card' : ''}" id="sk-text-card">
         <div class="card-hdr"><div class="dot" ${mode === 'info' ? 'style="background:#fff;"' : ''}></div> <span id="sk-text-hdr">${mode === 'info' ? '📊 إنفوجرافيك — المهارة' : 'شرح المهارة'}</span></div>
@@ -906,6 +924,7 @@ function showSkill(i) {
   if (!s || !document.getElementById('sk-text')) return;   /* انتقل المستخدم لقسم آخر قبل العرض */
   if (window.ENV && !st.visited[i]) ENV.track('skill', { module: SK_MODULE_NO, lesson: String(st.lid), skill: s.title });
   st.idx = i; st.visited[i] = true;
+  const mobSel = document.getElementById('sk-mob'); if (mobSel) mobSel.value = String(i);
 
   /* ── النص ── */
   const textEl = document.getElementById('sk-text');
@@ -979,6 +998,31 @@ function stopActivationIfAny() {
 }
 
 function showContent(lid, sk, btn) {
+  if (sk !== 'content' && typeof skClearDropdowns === 'function') skClearDropdowns();
+  /* النشاط لا يظهر إلا بعد دراسة «محتوى الدرس» (الجانب العملي) — لا يُطبَّق في نسخة التحكيم */
+  const _seenKey = 'envSeen_' + SK_MODULE_NO + '_' + lid + '_' + ((window.ENV && ENV.user && ENV.user() && ENV.user().u) || '');
+  if (sk === 'content') { try { localStorage.setItem(_seenKey, '1'); } catch (e) {} }
+  if (sk === 'activity' && !(window.ENV && ENV.CONFIG && ENV.CONFIG.OPEN_MODE)) {
+    let seen = true; try { seen = localStorage.getItem(_seenKey) === '1'; } catch (e) {}
+    if (!seen) {
+      if (typeof stopSupport === 'function') stopSupport(); if (typeof stopActivationCallout === 'function') stopActivationCallout(); closeMobileSidebarIfOpen();
+      document.getElementById('welcome').style.display = 'none';
+      const pnl = document.getElementById('panel');
+      pnl.className = 'panel visible';
+      pnl.innerHTML = `<div class="card" style="margin:auto;max-width:540px;text-align:center;">
+        <div class="card-body" style="padding:26px;">
+          <div style="font-size:42px;">🔒</div>
+          <h3 style="color:var(--primary-d);margin:8px 0 10px;">لن يظهر النشاط إلا بعد أداء الجانب العملي</h3>
+          <p style="line-height:2;">ادرس «محتوى الدرس ${lid}» وطبّق مهاراته عمليًا على برنامج CourseLab أولًا، ثم ارجع إلى «النشاط التعليمي».</p>
+          <button onclick="showContent('${lid}','content',document.querySelectorAll('#ls-${lid} .sub-btn')[1])"
+            style="margin-top:10px;background:linear-gradient(135deg,#0a8545,#2dd4bf);color:#fff;border:none;border-radius:50px;padding:9px 22px;font-family:'Cairo',sans-serif;font-weight:800;cursor:pointer;">📄 افتح محتوى الدرس ${lid}</button>
+        </div></div>`;
+      if (activeBtn) activeBtn.classList.remove('active');
+      if (btn) btn.classList.add('active');
+      activeBtn = btn;
+      return;
+    }
+  }
   if (window.ENV) ENV.track('view', { module: SK_MODULE_NO, lesson: String(lid), section: sk });
   stopSupport();
   closeMobileSidebarIfOpen();
