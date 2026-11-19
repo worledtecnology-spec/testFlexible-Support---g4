@@ -160,6 +160,7 @@ const LESSONS_DATA = {
           <h4>تحميل البرنامج</h4>
           <p>يتم تحميل برنامج CourseLab من خلال النقر على الرابط التالي:</p>
           <p><a href="https://courselab.software.informer.com/download/?ca1acdfa" target="_blank" rel="noopener noreferrer">📥 تحميل برنامج CourseLab</a></p>
+          <p style="background:#fff7ed;border-right:4px solid #f97316;border-radius:8px;padding:8px 12px;color:#9a3412;font-size:13px;font-weight:700;line-height:1.9;"><b>⚠️ ملحوظة:</b> في حالة ظهور خطأ وظهور نافذة 404، أعد المحاولة مرة أخرى بعد التأكد من وصولك للنت.</p>
           <p>بعد النقر على الرابط يتم تنزيل البرنامج في صورة ملف مضغوط داخل مجلد التنزيلات Downloads.</p>
           <h4>الوصول إلى الملف وفك الضغط والتثبيت</h4>
           <p>يمكنك تنزيل خطوات التثبيت مصوّرة في ملف Word بالنقر على الرابط التالي:</p>

@@ -47,7 +47,7 @@ h1{margin:0 0 4px;font-size:22px;color:var(--primary);font-weight:800;}
     <div class="fg"><label for="username">اسم المستخدم</label><div class="inp"><span>👤</span><input id="username" type="text" autocomplete="username" dir="ltr" style="text-align:right;" placeholder="أدخل اسم المستخدم"></div></div>
     <div class="fg"><label for="password">كلمة المرور</label><div class="inp"><span>🔒</span><input id="password" type="password" autocomplete="current-password" placeholder="أدخل كلمة المرور"></div></div>
     <button class="btn" id="loginBtn" onclick="doLogin()">دخول</button>
-    <div class="note">📘 اسم المستخدم وكلمة المرور هما نفس بيانات دخولك للبيئة.</div>
+    <div class="note">📘 اسم المستخدم وكلمة المرور تحصل عليهما من الباحثة.</div>
   </div>
 </div>
 <script>
@@ -68,7 +68,10 @@ function doLogin(){
   btn.disabled = true; btn.textContent = '⏳ جارٍ التحقق...';
   ENV.loginStudent(un, pw).then(function(){
     var a = localStorage.getItem('assignedEnv');
-    if (a && a !== ENV.SITE) { location.replace(ENV.url(a, 'index.html')); return; }
+    /* لم يؤدِّ الاختبار القبلي/أساليب التعلم بعد: يكملهما أولاً وهو مسجّل دخوله */
+    if (!a || !localStorage.getItem('stylesTestCompleted')) { location.replace(ENV.nextStepUrl()); return; }
+    /* موجَّه لبيئة أخرى: يدخلها مباشرة */
+    if (a !== ENV.SITE) { ENV.setGroupOK(a); location.replace(ENV.url(a, 'mods.html')); return; }
     ENV.setGroupOK(ENV.SITE);
     location.replace('mods.html');
   }).catch(function(e){
